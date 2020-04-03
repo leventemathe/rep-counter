@@ -7,7 +7,7 @@ import ExerciseContext from '../../stores';
 import Page from './Page';
 
 export default withRouter(({ history }) => {
-  const exerciseStore = useContext(ExerciseContext);
+  const { exerciseStore } = useContext(ExerciseContext);
 
   return (
     <Page>

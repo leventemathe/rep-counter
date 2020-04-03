@@ -23,19 +23,22 @@ const exercises = [
   {
     id: 0,
     name: 'Squat',
+    description: 'You squat, then stand up...',
   },
   {
     id: 1,
     name: 'Benchpress',
+    description: 'You press the bar above you, dummy!',
   },
   {
     id: 2,
     name: 'Row',
+    description: 'Pull, like you never pulled before!',
   },
 ];
 
 export default withRouter(observer(({ history }) => {
-  const exerciseStore = useContext(ExerciseContext);
+  const { exerciseStore } = useContext(ExerciseContext);
 
   return (
     <Page>
@@ -44,15 +47,19 @@ export default withRouter(observer(({ history }) => {
         header={<Typography.Title level={3}>Exercises</Typography.Title>}
         dataSource={exercises}
         bordered
-      // loading
-        renderItem={item => (
-          <List.Item>
-            <List.Item.Meta
-            // avatar={<Avatar src="" />}
-              onClick={() => { exerciseStore.currentExercise = item.name; }}
-              title={<Link to={`/exercise/${item.id}`}>{item.name}</Link>}
-            />
-          </List.Item>
+        // loading
+        renderItem={exercise => (
+          <Link
+            to={`/exercise/${exercise.id}`}
+            onClick={() => { exerciseStore.currentExercise = exercise.name; }}
+          >
+            <List.Item>
+              <List.Item.Meta
+                title={exercise.name}
+                description={exercise.description}
+              />
+            </List.Item>
+          </Link>
         )}
       />
 
