@@ -44,7 +44,7 @@ export default () => (
         <List.Item>
           <List.Item.Meta
             // avatar={<Avatar src="" />}
-            title={<Link to={`/${item.id}`}>{item.name}</Link>}
+            title={<Link to={`/exercise/${item.id}`}>{item.name}</Link>}
             // description=""
           />
         </List.Item>

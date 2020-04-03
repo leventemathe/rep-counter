@@ -1,6 +1,17 @@
 import React from 'react';
-import styled from 'styled-components';
+import { withRouter } from 'react-router-dom';
 
-const Styles = styled.div``;
+import { PageHeader } from 'antd';
 
-export default () => <Styles>Exercise</Styles>;
+import Page from './Page';
+
+export default withRouter(({ history }) => (
+  <Page>
+    <PageHeader
+      className="site-page-header"
+      onBack={() => history.goBack()}
+      title="Exercise"
+      // subTitle=""
+    />
+  </Page>
+));
