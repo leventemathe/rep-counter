@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import { observer } from 'mobx-react';
+import { withRouter, Link } from 'react-router-dom';
 
 import { Button, List, Typography } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
@@ -34,7 +34,7 @@ const exercises = [
   },
 ];
 
-export default observer(() => {
+export default withRouter(observer(({ history }) => {
   const exerciseStore = useContext(ExerciseContext);
 
   return (
@@ -56,9 +56,14 @@ export default observer(() => {
         )}
       />
 
-      <AddButton type="primary" shape="circle" size="large">
+      <AddButton
+        type="primary"
+        shape="circle"
+        size="large"
+        onClick={() => history.push('/exercise/new')}
+      >
         <PlusOutlined />
       </AddButton>
     </Page>
   );
-});
+}));

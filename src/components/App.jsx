@@ -1,4 +1,4 @@
 import React from 'react';
-import MainRouterContainer from './routing/MainRouterContainer';
+import MainRouter from './routing/MainRouter';
 
-export default () => <MainRouterContainer />;
+export default () => <MainRouter />;
