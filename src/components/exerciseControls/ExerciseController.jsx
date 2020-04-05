@@ -12,12 +12,16 @@ const Styles = styled.div`
 
   border-bottom: 1px solid rgba(0, 0, 0, 0.25);
 
+  overflow: hidden;
+
   @keyframes showAnimation {
     from {
       background-color: #1890ff;
+      max-height: 0;
     }
     to {
       background-color: white;
+      max-height: 15rem;
     }
   }
 
