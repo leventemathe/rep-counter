@@ -10,7 +10,7 @@ const Styles = styled.div`
 
   padding: 16px;
 
-  ${props => props.border && css`border-bottom: 1px solid rgba(0, 0, 0, 0.25);`}
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
 
   @keyframes showAnimation {
     from {
@@ -26,26 +26,81 @@ const Styles = styled.div`
 
 const ControllerStyles = styled.div`
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: space-evenly;
-  
-  width: 100%;
 
+  width: 100%;
   margin-top: 16px; 
 `;
 
-export default ({ playAnimation, border, title }) => (
-  <Styles playAnimation={playAnimation} border={border}>
+const ControllerButton = styled(Button)`
+  width: 4rem;
+  height: 3rem;
+  margin: 4px 0;
+  border: none;
+`;
+
+const MinuButton = styled(ControllerButton)`
+  background-color: #ff4d4f;
+  
+  &:hover {
+    background-color: #ff4d4f;
+  }
+`;
+
+const PlusButton = styled(ControllerButton)`
+  background-color: #a0d911;
+  
+  &:hover {
+    background-color: #a0d911;
+  }
+`;
+
+const ButtonArea = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const ValueArea = styled.div`
+  display: grid;
+  place-items: center;
+
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 50%;
+
+  width: 4rem;
+  height: 4rem;
+
+  * {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+`;
+
+export default ({ playAnimation, title }) => (
+  <Styles playAnimation={playAnimation}>
     <Typography.Text code>{title}</Typography.Text>
 
     <ControllerStyles>
-      <Button>-10</Button>
-      <Button>-5</Button>
-      <Button>-1</Button>
-      <div>123</div>
-      <Button>+1</Button>
-      <Button>+5</Button>
-      <Button>+10</Button>
+      <ButtonArea>
+        <MinuButton type="primary">1</MinuButton>
+        <MinuButton type="primary">5</MinuButton>
+        <MinuButton type="primary">10</MinuButton>
+      </ButtonArea>
+
+      <Typography.Title level={3}>-</Typography.Title>
+
+      <ValueArea>
+        <Typography.Title level={4}>123</Typography.Title>
+      </ValueArea>
+
+      <Typography.Title level={3}>+</Typography.Title>
+
+      <ButtonArea>
+        <PlusButton type="primary">1</PlusButton>
+        <PlusButton type="primary">5</PlusButton>
+        <PlusButton type="primary">10</PlusButton>
+      </ButtonArea>
     </ControllerStyles>
   </Styles>
 );

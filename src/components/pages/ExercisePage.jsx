@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { PageHeader, Button } from 'antd';
+import { PageHeader, Button, Typography } from 'antd';
 
 import ExerciseContext from '../../stores';
 import deleteExercise from '../../networking/exercises/deleteExercise';
@@ -20,6 +20,17 @@ const DeleteButton = styled(NetworkingButton)`
 
 const AddSetButton = styled(AddButton)`
   margin: 16px 0;
+`;
+
+const ExerciseControllerTitle = styled(Typography.Title)`
+  padding: 0 !important;
+  margin: 0.3rem 0.6rem !important;
+  color: white !important;
+`;
+
+const TitleArea = styled.div`
+  background-color: #1890ff;
+  width: 100%;
 `;
 
 const SetArea = styled.div`
@@ -89,18 +100,23 @@ export default withRouter(({ history }) => {
     setSets([createNewSet(), ...sets]);
   };
 
+  if (!currentExercise) {
+    history.push('/');
+    return null;
+  }
+
   return (
     <Page>
       <PageHeader
         className="site-page-header"
         onBack={goBack}
-        title={(currentExercise && currentExercise.name) || 'Exercise'}
+        title={(currentExercise.name) || 'Exercise'}
       />
       <DeleteButton
         buttonProps={{
           danger: true,
         }}
-        action={async () => currentExercise && deleteExercise(currentExercise.id)}
+        action={async () => deleteExercise(currentExercise.id)}
         text="Delete"
         loadingText="Deleting"
         onNetworkError={onDeleteFailed}
@@ -110,12 +126,17 @@ export default withRouter(({ history }) => {
       {sets.map((set, index) => (
         <SetArea key={sets.length - index - 1}>
           {index === 0 && <AddSetButton onClick={addSet} />}
+
+          <TitleArea>
+            <ExerciseControllerTitle level={3}>{`Set ${sets.length - index}`}</ExerciseControllerTitle>
+          </TitleArea>
+
           <ExerciseController
             title="Reps"
             playAnimation={sets.length > 1 && index === 0}
           />
           <ExerciseController
-            title="Weight"
+            title={`Weight (${exerciseStore.unit})`}
             playAnimation={sets.length > 1 && index === 0}
             border
           />
