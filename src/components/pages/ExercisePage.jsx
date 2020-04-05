@@ -51,12 +51,12 @@ export default withRouter(({ history }) => {
     history.goBack();
   };
 
-  const createNewSet = () => ({
+  const [sets, setSets] = useState([{
     weight: (currentExercise && currentExercise.weight) || 0,
     reps: 0,
-  });
+  }]);
 
-  const [sets, setSets] = useState([createNewSet()]);
+  const createNewSet = () => ({ ...(sets[sets.length - 1]) });
 
   /**
    *
