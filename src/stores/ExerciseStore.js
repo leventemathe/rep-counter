@@ -1,9 +1,6 @@
 import { observable, decorate } from 'mobx';
 
-export const Units = {
-  METRIC: 'kg',
-  IMPERIAL: 'lbs',
-};
+import Units from '../constants/Units';
 
 export default class ExerciseStore {
   currentExercise;

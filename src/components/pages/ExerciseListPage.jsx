@@ -29,6 +29,7 @@ export default withRouter(observer(({ history }) => {
 
   return (
     <Page>
+      {/* // TODO: Better error handling */}
       {error && <div>{error}</div>}
       <ExerciseList
         itemLayout="horizontal"
