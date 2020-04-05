@@ -3,8 +3,7 @@ import styled from 'styled-components';
 import { observer } from 'mobx-react';
 import { withRouter, Link } from 'react-router-dom';
 
-import { Button, List, Typography } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { List, Typography } from 'antd';
 
 import ExerciseContext from '../../stores';
 import Page from './Page';
@@ -12,7 +11,9 @@ import Page from './Page';
 import useNetworkResource from '../../networking/useNetworkResource';
 import listAllExercises from '../../networking/exercises/listAllExercises';
 
-const AddButton = styled(Button)`
+import AddButton from '../ui/AddButton';
+
+const AddExerciseButton = styled(AddButton)`
   position: absolute;
   bottom: 32px;
   right: 32px;
@@ -21,7 +22,6 @@ const AddButton = styled(Button)`
 const ExerciseList = styled(List)`
   border: none;
 `;
-
 
 export default withRouter(observer(({ history }) => {
   const { loading, error, resource: exercises } = useNetworkResource(listAllExercises);
@@ -52,14 +52,7 @@ export default withRouter(observer(({ history }) => {
         )}
       />
 
-      <AddButton
-        type="primary"
-        shape="circle"
-        size="large"
-        onClick={() => history.push('/exercise/new')}
-      >
-        <PlusOutlined />
-      </AddButton>
+      <AddExerciseButton onClick={() => history.push('/exercise/new')} />
     </Page>
   );
 }));
