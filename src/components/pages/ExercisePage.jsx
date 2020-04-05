@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { PageHeader } from 'antd';
+import { PageHeader, Button } from 'antd';
 
 import ExerciseContext from '../../stores';
 import deleteExercise from '../../networking/exercises/deleteExercise';
@@ -26,6 +26,11 @@ const SetArea = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+`;
+
+const SaveButton = styled(Button)`
+  margin: 32px auto;
+  display: block;
 `;
 
 export default withRouter(({ history }) => {
@@ -110,6 +115,8 @@ export default withRouter(({ history }) => {
           />
         </SetArea>
       ))}
+
+      <SaveButton size="large" type="primary" shape="round">Save</SaveButton>
     </Page>
   );
 });
