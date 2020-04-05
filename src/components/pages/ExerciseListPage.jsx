@@ -9,6 +9,9 @@ import { PlusOutlined } from '@ant-design/icons';
 import ExerciseContext from '../../stores';
 import Page from './Page';
 
+import useNetworkResource from '../../networking/useNetworkResource';
+import listAllExercises from '../../networking/exercises/listAllExercises';
+
 const AddButton = styled(Button)`
   position: absolute;
   bottom: 32px;
@@ -19,35 +22,20 @@ const ExerciseList = styled(List)`
   border: none;
 `;
 
-const exercises = [
-  {
-    id: 0,
-    name: 'Squat',
-    description: 'You squat, then stand up...',
-  },
-  {
-    id: 1,
-    name: 'Benchpress',
-    description: 'You press the bar above you, dummy!',
-  },
-  {
-    id: 2,
-    name: 'Row',
-    description: 'Pull, like you never pulled before!',
-  },
-];
 
 export default withRouter(observer(({ history }) => {
+  const { loading, error, resource: exercises } = useNetworkResource(listAllExercises);
   const { exerciseStore } = useContext(ExerciseContext);
 
   return (
     <Page>
+      {error && <div>{error}</div>}
       <ExerciseList
         itemLayout="horizontal"
         header={<Typography.Title level={3}>Exercises</Typography.Title>}
-        dataSource={exercises}
+        dataSource={exercises || []}
         bordered
-        // loading
+        loading={loading}
         renderItem={exercise => (
           <Link
             to={`/exercise/${exercise.id}`}
