@@ -14,18 +14,27 @@ const Styles = styled.div`
 
   overflow: hidden;
 
-  @keyframes showAnimation {
-    from {
-      background-color: #1890ff;
+  @keyframes showControllerAnimation {
+    0% {
       max-height: 0;
+      padding: 0 16px;
+      background-color: #1890ff;
     }
-    to {
-      background-color: white;
+    40% {
+      max-height: 0;
+      padding: 0 16px;
+      background-color: #1890ff;
+    }
+    100% {
       max-height: 15rem;
+      padding: 16px;
+      background-color: white;
     }
   }
 
-  ${props => props.playAnimation && css`animation: showAnimation 0.6s ease-out`}
+  ${props => props.playAnimation && css`
+    animation: showControllerAnimation 0.7s ease-out;
+  `}
 `;
 
 const ControllerStyles = styled.div`
@@ -81,7 +90,7 @@ const ValueArea = styled.div`
   }
 `;
 
-export default ({ playAnimation, title }) => (
+export default ({ title, playAnimation }) => (
   <Styles playAnimation={playAnimation}>
     <Typography.Text code>{title}</Typography.Text>
 

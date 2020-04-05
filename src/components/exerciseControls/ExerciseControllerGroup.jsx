@@ -1,9 +1,14 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { Typography } from 'antd';
 
 import ExerciseController from './ExerciseController';
+
+const Styles = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 const ExerciseControllerTitle = styled(Typography.Title)`
   padding: 0 !important;
@@ -14,22 +19,37 @@ const ExerciseControllerTitle = styled(Typography.Title)`
 const TitleArea = styled.div`
   background-color: #1890ff;
   width: 100%;
+
+  @keyframes showTitleAnimation {
+    from {
+      transform: scale(0) translateY(-8rem);
+    }
+    to {
+      transform: scale(1) translateY(0);
+    }    
+  }
+
+  ${props => props.playAnimation && css`animation: showTitleAnimation 0.3s ease-out`}
 `;
 
-export default ({ index, sets, unit }) => (
-  <div>
-    <TitleArea>
-      <ExerciseControllerTitle level={3}>{`Set ${sets.length - index}`}</ExerciseControllerTitle>
-    </TitleArea>
+/** Use this only in the ExerciseControllerGroup for now, beceause animation is optimized for that */
+export default ({ index, sets, unit }) => {
+  const notFirstGroup = sets.length > 1 && index === 0;
 
-    <ExerciseController
-      title="Reps"
-      playAnimation={sets.length > 1 && index === 0}
-    />
-    <ExerciseController
-      title={`Weight (${unit})`}
-      playAnimation={sets.length > 1 && index === 0}
-      border
-    />
-  </div>
-);
+  return (
+    <Styles>
+      <TitleArea playAnimation={notFirstGroup}>
+        <ExerciseControllerTitle level={3}>{`Set ${sets.length - index}`}</ExerciseControllerTitle>
+      </TitleArea>
+
+      <ExerciseController
+        title="Reps"
+        playAnimation={notFirstGroup}
+      />
+      <ExerciseController
+        title={`Weight (${unit})`}
+        playAnimation={notFirstGroup}
+      />
+    </Styles>
+  );
+};
