@@ -111,7 +111,13 @@ export default withRouter(({ history }) => {
         <SetArea key={sets.length - index - 1}>
           {index === 0 && <AddSetButton onClick={addSet} />}
           <ExerciseController
+            title="Reps"
             playAnimation={sets.length > 1 && index === 0}
+          />
+          <ExerciseController
+            title="Weight"
+            playAnimation={sets.length > 1 && index === 0}
+            border
           />
         </SetArea>
       ))}
