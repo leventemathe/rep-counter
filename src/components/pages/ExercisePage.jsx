@@ -58,35 +58,22 @@ export default withRouter(({ history }) => {
 
   const [sets, setSets] = useState([createNewSet()]);
 
-  const add = (a, b) => a + b;
-  const subtract = (a, b) => a - b;
-
-  const adjustSet = (setIndex, amount, value, operation) => {
+  /**
+   *
+   * @param {number} setIndex the index of the set in the sets array
+   * @param {amount} amount the negative or positive amount to be added
+   * @param {string} value what are we adding the amount to? reps or weight
+   */
+  const adjustSet = (setIndex, amount, value) => {
     const currentSet = sets[setIndex];
     if (!currentSet) return;
 
-    const newAmount = operation(currentSet[value] + amount);
+    const newAmount = currentSet[value] + amount;
     const newSet = { ...currentSet, [value]: newAmount };
 
     const newSets = [...sets];
     newSets[setIndex] = newSet;
     setSets(newSets);
-  };
-
-  const incrementRep = (setIndex, amount) => {
-    adjustSet(setIndex, amount, 'reps', add);
-  };
-
-  const decrementRep = (setIndex, amount) => {
-    adjustSet(setIndex, amount, 'reps', subtract);
-  };
-
-  const incrementWeight = (setIndex, amount) => {
-    adjustSet(setIndex, amount, 'weight', add);
-  };
-
-  const decrementWeight = (setIndex, amount) => {
-    adjustSet(setIndex, amount, 'weight', subtract);
   };
 
   const addSet = () => {
@@ -119,7 +106,7 @@ export default withRouter(({ history }) => {
       {sets.map((set, index) => (
         <SetArea key={sets.length - index - 1}>
           {index === 0 && <AddSetButton onClick={addSet} />}
-          <ExerciseControllerGroup index={index} sets={sets} unit={exerciseStore.unit} />
+          <ExerciseControllerGroup index={index} sets={sets} unit={exerciseStore.unit} adjustSet={adjustSet} />
         </SetArea>
       ))}
 

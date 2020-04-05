@@ -90,29 +90,31 @@ const ValueArea = styled.div`
   }
 `;
 
-export default ({ title, playAnimation }) => (
+export default ({
+  title, playAnimation, set, setIndex, value, adjustSet,
+}) => (
   <Styles playAnimation={playAnimation}>
     <Typography.Text code>{title}</Typography.Text>
 
     <ControllerStyles>
       <ButtonArea>
-        <MinuButton type="primary">1</MinuButton>
-        <MinuButton type="primary">5</MinuButton>
-        <MinuButton type="primary">10</MinuButton>
+        <MinuButton onClick={() => adjustSet(setIndex, -1, value)} type="primary">1</MinuButton>
+        <MinuButton onClick={() => adjustSet(setIndex, -5, value)} type="primary">5</MinuButton>
+        <MinuButton onClick={() => adjustSet(setIndex, -10, value)} type="primary">10</MinuButton>
       </ButtonArea>
 
       <Typography.Title level={3}>-</Typography.Title>
 
       <ValueArea>
-        <Typography.Title level={4}>123</Typography.Title>
+        <Typography.Title level={4}>{set[value]}</Typography.Title>
       </ValueArea>
 
       <Typography.Title level={3}>+</Typography.Title>
 
       <ButtonArea>
-        <PlusButton type="primary">1</PlusButton>
-        <PlusButton type="primary">5</PlusButton>
-        <PlusButton type="primary">10</PlusButton>
+        <PlusButton onClick={() => adjustSet(setIndex, 1, value)} type="primary">1</PlusButton>
+        <PlusButton onClick={() => adjustSet(setIndex, 5, value)} type="primary">5</PlusButton>
+        <PlusButton onClick={() => adjustSet(setIndex, 10, value)} type="primary">10</PlusButton>
       </ButtonArea>
     </ControllerStyles>
   </Styles>

@@ -33,7 +33,9 @@ const TitleArea = styled.div`
 `;
 
 /** Use this only in the ExerciseControllerGroup for now, beceause animation is optimized for that */
-export default ({ index, sets, unit }) => {
+export default ({
+  index, sets, unit, adjustSet,
+}) => {
   const notFirstGroup = sets.length > 1 && index === 0;
 
   return (
@@ -45,10 +47,18 @@ export default ({ index, sets, unit }) => {
       <ExerciseController
         title="Reps"
         playAnimation={notFirstGroup}
+        set={sets[index]}
+        setIndex={index}
+        value="reps"
+        adjustSet={adjustSet}
       />
       <ExerciseController
         title={`Weight (${unit})`}
         playAnimation={notFirstGroup}
+        set={sets[index]}
+        setIndex={index}
+        value="weight"
+        adjustSet={adjustSet}
       />
     </Styles>
   );
