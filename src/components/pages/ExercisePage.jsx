@@ -18,6 +18,7 @@ const DeleteButton = styled(NetworkingButton)`
 
 export default withRouter(({ history }) => {
   const { exerciseStore } = useContext(ExerciseContext);
+  const { currentExercise } = exerciseStore;
 
   const onDeleteFailed = error => {
     // TODO: pop a modal
@@ -31,14 +32,14 @@ export default withRouter(({ history }) => {
       <PageHeader
         className="site-page-header"
         onBack={() => history.goBack()}
-        title={exerciseStore.currentExercise || 'Exercise'}
+        title={currentExercise.name || 'Exercise'}
       />
       <DeleteButton
         buttonProps={{
           danger: true,
         }}
         // TODO: pass actual id
-        action={async () => deleteExercise(0)}
+        action={async () => deleteExercise(currentExercise.name)}
         text="Delete"
         loadingText="Deleting"
         onNetworkError={onDeleteFailed}

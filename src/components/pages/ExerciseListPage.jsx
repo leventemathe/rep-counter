@@ -40,7 +40,7 @@ export default withRouter(observer(({ history }) => {
         renderItem={exercise => (
           <Link
             to={`/exercise/${exercise.id}`}
-            onClick={() => { exerciseStore.currentExercise = exercise.name; }}
+            onClick={() => { exerciseStore.currentExercise = exercise; }}
           >
             <List.Item>
               <List.Item.Meta
