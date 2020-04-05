@@ -35,14 +35,13 @@ export default withRouter(({ history }) => {
       <PageHeader
         className="site-page-header"
         onBack={goBack}
-        title={currentExercise.name || 'Exercise'}
+        title={(currentExercise && currentExercise.name) || 'Exercise'}
       />
       <DeleteButton
         buttonProps={{
           danger: true,
         }}
-        // TODO: pass actual id
-        action={async () => deleteExercise(currentExercise.name)}
+        action={async () => currentExercise && deleteExercise(currentExercise.id)}
         text="Delete"
         loadingText="Deleting"
         onNetworkError={onDeleteFailed}
