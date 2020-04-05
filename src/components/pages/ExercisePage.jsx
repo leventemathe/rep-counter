@@ -2,10 +2,11 @@ import React, { useContext, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { PageHeader, Button } from 'antd';
+import { PageHeader } from 'antd';
 
 import ExerciseContext from '../../stores';
 import deleteExercise from '../../networking/exercises/deleteExercise';
+import saveSession from '../../networking/exercises/saveSession';
 
 import Page from './Page';
 import NetworkingButton from '../ui/NetworkingButton';
@@ -32,7 +33,7 @@ const SetArea = styled.div`
   }
 `;
 
-const SaveButton = styled(Button)`
+const SaveButton = styled(NetworkingButton)`
   margin: 32px auto;
   display: block;
 `;
@@ -42,6 +43,11 @@ export default withRouter(({ history }) => {
   const { currentExercise } = exerciseStore;
 
   const onDeleteFailed = error => {
+    // TODO: pop a modal
+    console.error(error);
+  };
+
+  const onSaveFailed = error => {
     // TODO: pop a modal
     console.error(error);
   };
@@ -96,9 +102,9 @@ export default withRouter(({ history }) => {
         buttonProps={{
           danger: true,
         }}
-        action={async () => deleteExercise(currentExercise.id)}
         text="Delete"
         loadingText="Deleting"
+        action={async () => deleteExercise(currentExercise.id)}
         onNetworkError={onDeleteFailed}
         onNetworkResourceLoaded={goBack}
       />
@@ -110,7 +116,18 @@ export default withRouter(({ history }) => {
         </SetArea>
       ))}
 
-      <SaveButton size="large" type="primary" shape="round">Save</SaveButton>
+      <SaveButton
+        buttonProps={{
+          size: 'large',
+          type: 'primary',
+          shape: 'round',
+        }}
+        text="Save"
+        loadingText="Saving"
+        action={async () => saveSession(sets)}
+        onNetworkError={onSaveFailed}
+        onNetworkResourceLoaded={goBack}
+      />
     </Page>
   );
 });
