@@ -25,13 +25,16 @@ export default withRouter(({ history }) => {
     console.error(error);
   };
 
-  const onDeletion = () => history.goBack();
+  const goBack = () => {
+    exerciseStore.currentExercise = null;
+    history.goBack();
+  };
 
   return (
     <Page>
       <PageHeader
         className="site-page-header"
-        onBack={() => history.goBack()}
+        onBack={goBack}
         title={currentExercise.name || 'Exercise'}
       />
       <DeleteButton
@@ -43,7 +46,7 @@ export default withRouter(({ history }) => {
         text="Delete"
         loadingText="Deleting"
         onNetworkError={onDeleteFailed}
-        onNetworkResourceLoaded={onDeletion}
+        onNetworkResourceLoaded={goBack}
       />
     </Page>
   );
