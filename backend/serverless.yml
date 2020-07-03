@@ -1,0 +1,15 @@
+service: rep-counter
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: prod
+  region: eu-central-1
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+     - http:
+         path: users/create
+         method: get
