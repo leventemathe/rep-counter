@@ -2,14 +2,149 @@ service: rep-counter
 
 provider:
   name: aws
-  runtime: nodejs12.x
-  stage: prod
   region: eu-central-1
+  stage: ${opt:stage, 'dev'}
+  profile: serverless
+  runtime: nodejs12.x
+  environment:
+    DYNAMO_DB_EXERCISES_TABLE: ${self:service}-exercises-${opt:stage, self:provider.stage}
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - dynamodb:PutItem
+        - dynamodb:Scan*
+        - dynamodb:GetItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/${self:service}-exercises-${opt:stage, self:provider.stage}
+
 
 functions:
-  hello:
-    handler: handler.hello
+  listExercises:
+    handler: handler.listExercises
     events:
-     - http:
-         path: users/create
-         method: get
+      - http:
+          method: get
+          path: /v1/exercises
+          cors: true
+          # authorizer:
+          #   type: COGNITO_USER_POOLS
+          #   authorizerId:
+          #     Ref: RepCounterAuthorizer
+
+  getExercise:
+    handler: handler.getExercise
+    events:
+      - http:
+          method: get
+          path: /v1/exercises/{name}
+          cors: true
+          # authorizer:
+          #   type: COGNITO_USER_POOLS
+          #   authorizerId:
+          #     Ref: RepCounterAuthorizer          
+
+  createExercise:
+    handler: handler.createExercise
+    events:
+      - http:
+          method: post
+          path: /v1/exercises/create
+          cors: true
+          # request:
+          #   schema:
+          #     application/json: ${file(createKitten.json)}
+          # authorizer:
+          #   type: COGNITO_USER_POOLS
+          #   authorizerId:
+          #     Ref: RepCounterAuthorizer
+
+  delete:
+    handler: handler.deleteExercise
+    events:
+      - http:
+          method: delete
+          path: /v1/exercises/{name}
+          cors: true
+          # authorizer:
+          #   type: COGNITO_USER_POOLS
+          #   authorizerId:
+          #     Ref: RepCounterAuthorizer
+
+  addSessionToExercise:
+    handler: handler.addSessionToExercise
+    events:
+      - http:
+          method: post
+          path: /v1/exercises/addSession/{name}
+          cors: true
+          # request:
+          #   schema:
+          #     application/json: ${file(editKitten.json)}
+          # authorizer:
+          #   type: COGNITO_USER_POOLS
+          #   authorizerId:
+          #     Ref: RepCounterAuthorizer
+
+resources:
+  Resources:    
+    # required if the authentication fails, because lamdba is not reached in that case, so no headers are returned
+    GatewayResponseDefault4XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
+    RepCounterUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: ${self:service}-user-pool-${opt:stage, self:provider.stage}
+        MfaConfiguration: OFF
+        UsernameAttributes:
+          - email
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 9
+            RequireLowercase: True
+            RequireNumbers: True
+            RequireSymbols: False
+            RequireUppercase: True
+    RepCounterUserPoolReactClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: ${self:service}-user-pool-react-client-${opt:stage, self:provider.stage}
+        UserPoolId: 
+          Ref: RepCounterUserPool
+        GenerateSecret: False
+    RepCounterAuthorizer:
+      Type: AWS::ApiGateway::Authorizer
+      Properties: 
+        Name: ${self:service}-cognito-authorizer-${opt:stage, self:provider.stage}
+        Type: COGNITO_USER_POOLS
+        IdentitySource: method.request.header.Authorization
+        RestApiId: 
+          Ref: ApiGatewayRestApi
+        ProviderARNs: 
+          - Fn::GetAtt:
+              - RepCounterUserPool
+              - Arn
+    ExercisesTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        TableName: ${self:service}-exercises-${opt:stage, self:provider.stage}
+        AttributeDefinitions:
+          # partition key
+          - AttributeName: PK
+            AttributeType: S
+          # sorting partition key
+          - AttributeName: PK
+            AttributeType: S
+        KeySchema:
+          - AttributeName: PK
+            KeyType: HASH
+          - AttributeName: PK
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
