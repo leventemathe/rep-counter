@@ -1,0 +1,15 @@
+{
+  "name": "rep-counter-backend",
+  "version": "1.0.0",
+  "main": "handler.js",
+  "author": "Levente Máthé",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@middy/core": "^1.0.0",
+    "@middy/http-cors": "^1.0.0",
+    "aws-sdk": "^2.709.0"
+  },
+  "scripts": {
+    "deploy": "serverless deploy"
+  }
+}
