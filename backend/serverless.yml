@@ -31,10 +31,10 @@ functions:
           method: get
           path: /v1/exercises
           cors: true
-          # authorizer:
-          #   type: COGNITO_USER_POOLS
-          #   authorizerId:
-          #     Ref: RepCounterAuthorizer
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: RepCounterAuthorizer
 
   getSessionsForExercise:
     handler: handler.getSessionsForExercise
@@ -43,10 +43,10 @@ functions:
           method: get
           path: /v1/exercises/{name}
           cors: true
-          # authorizer:
-          #   type: COGNITO_USER_POOLS
-          #   authorizerId:
-          #     Ref: RepCounterAuthorizer          
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: RepCounterAuthorizer          
 
   createExercise:
     handler: handler.createExercise
@@ -58,10 +58,10 @@ functions:
           request:
             schema:
               application/json: ${file(createExercise.json)}
-          # authorizer:
-          #   type: COGNITO_USER_POOLS
-          #   authorizerId:
-          #     Ref: RepCounterAuthorizer
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: RepCounterAuthorizer
 
   delete:
     handler: handler.deleteExercise
@@ -70,10 +70,10 @@ functions:
           method: delete
           path: /v1/exercises/{name}
           cors: true
-          # authorizer:
-          #   type: COGNITO_USER_POOLS
-          #   authorizerId:
-          #     Ref: RepCounterAuthorizer
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: RepCounterAuthorizer
 
   addSessionToExercise:
     handler: handler.addSessionToExercise
@@ -85,10 +85,10 @@ functions:
           request:
             schema:
               application/json: ${file(addSession.json)}
-          # authorizer:
-          #   type: COGNITO_USER_POOLS
-          #   authorizerId:
-          #     Ref: RepCounterAuthorizer
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: RepCounterAuthorizer
 
 
 
@@ -113,39 +113,39 @@ resources:
         ResponseType: DEFAULT_5XX
         RestApiId:
           Ref: 'ApiGatewayRestApi'
-    # RepCounterUserPool:
-    #   Type: AWS::Cognito::UserPool
-    #   Properties:
-    #     UserPoolName: ${self:service}-user-pool-${opt:stage, self:provider.stage}
-    #     MfaConfiguration: OFF
-    #     UsernameAttributes:
-    #       - email
-    #     Policies:
-    #       PasswordPolicy:
-    #         MinimumLength: 9
-    #         RequireLowercase: True
-    #         RequireNumbers: True
-    #         RequireSymbols: False
-    #         RequireUppercase: True
-    # RepCounterUserPoolReactClient:
-    #   Type: AWS::Cognito::UserPoolClient
-    #   Properties:
-    #     ClientName: ${self:service}-user-pool-react-client-${opt:stage, self:provider.stage}
-    #     UserPoolId: 
-    #       Ref: RepCounterUserPool
-    #     GenerateSecret: False
-    # RepCounterAuthorizer:
-    #   Type: AWS::ApiGateway::Authorizer
-    #   Properties: 
-    #     Name: ${self:service}-cognito-authorizer-${opt:stage, self:provider.stage}
-    #     Type: COGNITO_USER_POOLS
-    #     IdentitySource: method.request.header.Authorization
-    #     RestApiId: 
-    #       Ref: ApiGatewayRestApi
-    #     ProviderARNs: 
-    #       - Fn::GetAtt:
-    #           - RepCounterUserPool
-    #           - Arn
+    RepCounterUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: ${self:service}-user-pool-${opt:stage, self:provider.stage}
+        MfaConfiguration: OFF
+        UsernameAttributes:
+          - email
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 9
+            RequireLowercase: True
+            RequireNumbers: True
+            RequireSymbols: False
+            RequireUppercase: True
+    RepCounterUserPoolReactClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: ${self:service}-user-pool-react-client-${opt:stage, self:provider.stage}
+        UserPoolId: 
+          Ref: RepCounterUserPool
+        GenerateSecret: False
+    RepCounterAuthorizer:
+      Type: AWS::ApiGateway::Authorizer
+      Properties: 
+        Name: ${self:service}-cognito-authorizer-${opt:stage, self:provider.stage}
+        Type: COGNITO_USER_POOLS
+        IdentitySource: method.request.header.Authorization
+        RestApiId: 
+          Ref: ApiGatewayRestApi
+        ProviderARNs: 
+          - Fn::GetAtt:
+              - RepCounterUserPool
+              - Arn
     ExercisesTable:
       Type: 'AWS::DynamoDB::Table'
       Properties:

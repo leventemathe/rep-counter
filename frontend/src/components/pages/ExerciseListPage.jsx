@@ -30,7 +30,7 @@ export default withRouter(observer(({ history }) => {
   return (
     <Page>
       {/* // TODO: Better error handling */}
-      {error && <div>{error.message}</div>}
+      {error && error.message && <div>{JSON.stringify(error.message)}</div>}
       <ExerciseList
         itemLayout="horizontal"
         header={<Typography.Title level={3}>Exercises</Typography.Title>}

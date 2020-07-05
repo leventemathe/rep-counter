@@ -4,6 +4,9 @@ const cors = require('@middy/http-cors');
 const { v1: uuidv1 } = require('uuid');
 
 exports.listExercises = middy(async (_event, _context, _callback) => {
+  console.log('EVENT: ', _event);
+  console.log('CONTEXT: ', _context);
+
   let scanParams = {
     TableName: process.env.DYNAMO_DB_EXERCISES_TABLE,
     FilterExpression: 'PK = :pk',
