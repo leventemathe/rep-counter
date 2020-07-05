@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { observer } from 'mobx-react';
@@ -7,11 +7,11 @@ import {
   PageHeader, Form, Input, Button,
 } from 'antd';
 
-import ExerciseContext from '../../stores';
+// import ExerciseContext from '../../stores';
 import createNewExercise from '../../networking/exercises/createNewExercise';
 
 import Page from './Page';
-import convertUnit from '../../helpers/convertUnit';
+// import convertUnit from '../../helpers/convertUnit';
 
 
 const NewExerciseForm = styled(Form)`
@@ -24,19 +24,19 @@ const NewExerciseForm = styled(Form)`
 `;
 
 export default withRouter(observer(({ history }) => {
-  const { exerciseStore } = useContext(ExerciseContext);
-  const [loading, setLoading] = useState(false);
+  // const { exerciseStore } = useContext(ExerciseContext);
 
-  const getDefaultWeight = (weight) => {
-    if (!weight) return null;
-    return convertUnit(weight, exerciseStore.unit);
-  };
+  // const getDefaultWeight = (weight) => {
+  //   if (!weight) return null;
+  //   return convertUnit(weight, exerciseStore.unit);
+  // };
+
+  const [loading, setLoading] = useState(false);
 
   const onFinish = async (exercise) => {
     try {
       setLoading(true);
-      const newExercise = { ...exercise, weight: getDefaultWeight(exercise.weight) };
-      await createNewExercise(newExercise);
+      await createNewExercise(exercise);
       history.goBack();
     } catch (error) {
       // TODO: better error handling
@@ -79,13 +79,6 @@ export default withRouter(observer(({ history }) => {
           name="description"
         >
           <Input placeholder="optional" />
-        </Form.Item>
-
-        <Form.Item
-          label="Starting weight"
-          name="weight"
-        >
-          <Input placeholder={`optional (${exerciseStore.unit})`} />
         </Form.Item>
 
         <Form.Item>

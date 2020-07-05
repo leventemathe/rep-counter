@@ -104,12 +104,12 @@ export default withRouter(({ history }) => {
         }}
         text="Delete"
         loadingText="Deleting"
-        action={async () => deleteExercise(currentExercise.id)}
+        action={async () => deleteExercise(currentExercise.name)}
         onNetworkError={onDeleteFailed}
         onNetworkResourceLoaded={goBack}
       />
 
-      {sets.map((set, index) => (
+      {sets.map((_set, index) => (
         <SetArea key={sets.length - index - 1}>
           {index === 0 && <AddSetButton onClick={addSet} />}
           <ExerciseControllerGroup index={index} sets={sets} unit={exerciseStore.unit} adjustSet={adjustSet} />
@@ -124,7 +124,7 @@ export default withRouter(({ history }) => {
         }}
         text="Save"
         loadingText="Saving"
-        action={async () => saveSession(sets)}
+        action={async () => saveSession(currentExercise.name, { sets })}
         onNetworkError={onSaveFailed}
         onNetworkResourceLoaded={goBack}
       />

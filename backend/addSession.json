@@ -1,0 +1,25 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "Session",
+  "required": ["sets"],
+  "properties": {
+    "sets": {
+      "type": "array",
+      "title": "A list of the sets",
+      "items": {
+        "type": "object",
+        "properties": {
+          "reps": {
+            "type": "number"
+          },
+          "weight": {
+            "type": "number"
+          }
+        },
+        "required": ["reps", "weight"]
+      }
+    }
+  }
+}

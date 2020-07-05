@@ -1,13 +1,7 @@
-// import request from '../request';
+import request from '../request';
 
 export default async (newExercise) => {
-  const url = process.env.REACT_APP_URL_NEW_EXERCISE;
-  if (!url) throw new Error('New exercise url not found');
+  const url = process.env.REACT_APP_URL_NEW_EXERCISE || 'https://f0cc6clsqf.execute-api.eu-central-1.amazonaws.com/dev/v1/exercises/create';
 
-  // TODO:
-  // return request(url, 'POST', headers, body);
-
-  return new Promise((resolve) => {
-    setTimeout(() => resolve(newExercise), 1000);
-  });
+  return request(url, 'POST', null, newExercise);
 };

@@ -1,0 +1,15 @@
+user:
+  PK: userId
+
+exercise:
+  PK: userId
+  SK: exerciseName
+  description: short description of exercise
+
+session:
+  PK: exerciseName
+  SK: sessionId
+  sets:
+    reps: 10
+    weight: 40
+

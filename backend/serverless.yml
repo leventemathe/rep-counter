@@ -11,12 +11,16 @@ provider:
   iamRoleStatements:
     - Effect: "Allow"
       Action:
-        - dynamodb:PutItem
-        - dynamodb:Scan*
-        - dynamodb:GetItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-      Resource: arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/${self:service}-exercises-${opt:stage, self:provider.stage}
+       - dynamodb:Query
+       - dynamodb:Scan
+       - dynamodb:GetItem
+       - dynamodb:PutItem
+       - dynamodb:UpdateItem
+       - dynamodb:DeleteItem
+      Resource:
+        Fn::GetAtt:
+          - ExercisesTable
+          - Arn
 
 
 functions:
@@ -32,8 +36,8 @@ functions:
           #   authorizerId:
           #     Ref: RepCounterAuthorizer
 
-  getExercise:
-    handler: handler.getExercise
+  getSessionsForExercise:
+    handler: handler.getSessionsForExercise
     events:
       - http:
           method: get
@@ -51,9 +55,9 @@ functions:
           method: post
           path: /v1/exercises/create
           cors: true
-          # request:
-          #   schema:
-          #     application/json: ${file(createKitten.json)}
+          request:
+            schema:
+              application/json: ${file(createExercise.json)}
           # authorizer:
           #   type: COGNITO_USER_POOLS
           #   authorizerId:
@@ -76,15 +80,17 @@ functions:
     events:
       - http:
           method: post
-          path: /v1/exercises/addSession/{name}
+          path: /v1/exercises/addSession/{exerciseName}
           cors: true
-          # request:
-          #   schema:
-          #     application/json: ${file(editKitten.json)}
+          request:
+            schema:
+              application/json: ${file(addSession.json)}
           # authorizer:
           #   type: COGNITO_USER_POOLS
           #   authorizerId:
           #     Ref: RepCounterAuthorizer
+
+
 
 resources:
   Resources:    
@@ -98,39 +104,48 @@ resources:
         ResponseType: DEFAULT_4XX
         RestApiId:
           Ref: 'ApiGatewayRestApi'
-    RepCounterUserPool:
-      Type: AWS::Cognito::UserPool
+    GatewayResponseDefault5XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
       Properties:
-        UserPoolName: ${self:service}-user-pool-${opt:stage, self:provider.stage}
-        MfaConfiguration: OFF
-        UsernameAttributes:
-          - email
-        Policies:
-          PasswordPolicy:
-            MinimumLength: 9
-            RequireLowercase: True
-            RequireNumbers: True
-            RequireSymbols: False
-            RequireUppercase: True
-    RepCounterUserPoolReactClient:
-      Type: AWS::Cognito::UserPoolClient
-      Properties:
-        ClientName: ${self:service}-user-pool-react-client-${opt:stage, self:provider.stage}
-        UserPoolId: 
-          Ref: RepCounterUserPool
-        GenerateSecret: False
-    RepCounterAuthorizer:
-      Type: AWS::ApiGateway::Authorizer
-      Properties: 
-        Name: ${self:service}-cognito-authorizer-${opt:stage, self:provider.stage}
-        Type: COGNITO_USER_POOLS
-        IdentitySource: method.request.header.Authorization
-        RestApiId: 
-          Ref: ApiGatewayRestApi
-        ProviderARNs: 
-          - Fn::GetAtt:
-              - RepCounterUserPool
-              - Arn
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_5XX
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
+    # RepCounterUserPool:
+    #   Type: AWS::Cognito::UserPool
+    #   Properties:
+    #     UserPoolName: ${self:service}-user-pool-${opt:stage, self:provider.stage}
+    #     MfaConfiguration: OFF
+    #     UsernameAttributes:
+    #       - email
+    #     Policies:
+    #       PasswordPolicy:
+    #         MinimumLength: 9
+    #         RequireLowercase: True
+    #         RequireNumbers: True
+    #         RequireSymbols: False
+    #         RequireUppercase: True
+    # RepCounterUserPoolReactClient:
+    #   Type: AWS::Cognito::UserPoolClient
+    #   Properties:
+    #     ClientName: ${self:service}-user-pool-react-client-${opt:stage, self:provider.stage}
+    #     UserPoolId: 
+    #       Ref: RepCounterUserPool
+    #     GenerateSecret: False
+    # RepCounterAuthorizer:
+    #   Type: AWS::ApiGateway::Authorizer
+    #   Properties: 
+    #     Name: ${self:service}-cognito-authorizer-${opt:stage, self:provider.stage}
+    #     Type: COGNITO_USER_POOLS
+    #     IdentitySource: method.request.header.Authorization
+    #     RestApiId: 
+    #       Ref: ApiGatewayRestApi
+    #     ProviderARNs: 
+    #       - Fn::GetAtt:
+    #           - RepCounterUserPool
+    #           - Arn
     ExercisesTable:
       Type: 'AWS::DynamoDB::Table'
       Properties:
@@ -139,12 +154,12 @@ resources:
           # partition key
           - AttributeName: PK
             AttributeType: S
-          # sorting partition key
-          - AttributeName: PK
+          # sorting key
+          - AttributeName: SK
             AttributeType: S
         KeySchema:
           - AttributeName: PK
             KeyType: HASH
-          - AttributeName: PK
+          - AttributeName: SK
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST

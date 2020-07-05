@@ -13,6 +13,7 @@ export default (action, trigger) => {
         setResource(result);
         setLoading(false);
       } catch (e) {
+        console.log(e);
         setError(e);
       }
     };

@@ -1,13 +1,10 @@
-// import request from '../request';
+import request from '../request';
 
-export default async (newSession) => {
-  const url = process.env.REACT_APP_URL_NEW_SESSION;
-  if (!url) throw new Error('New newSession url not found');
+export default async (exerciseName, newSession) => {
+  const url = process.env.REACT_APP_URL_NEW_SESSION || 'https://f0cc6clsqf.execute-api.eu-central-1.amazonaws.com/dev/v1/exercises/addSession';
+  const paramedUrl = `${url}/${exerciseName}`;
 
-  // TODO:
-  // return request(url, 'POST', headers, body);
+  console.log(newSession);
 
-  return new Promise((resolve) => {
-    setTimeout(() => resolve(newSession), 1000);
-  });
+  return request(paramedUrl, 'POST', null, newSession);
 };

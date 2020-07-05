@@ -1,0 +1,18 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "Exercise",
+  "required": ["name"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Name of the exercise",
+      "minLength": 2
+    },
+    "description": {
+      "type": "string",
+      "title": "A more detailed description of the exercise"
+    }
+  }
+}

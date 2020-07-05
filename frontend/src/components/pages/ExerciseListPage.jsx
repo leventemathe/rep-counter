@@ -30,7 +30,7 @@ export default withRouter(observer(({ history }) => {
   return (
     <Page>
       {/* // TODO: Better error handling */}
-      {error && <div>{error}</div>}
+      {error && <div>{error.message}</div>}
       <ExerciseList
         itemLayout="horizontal"
         header={<Typography.Title level={3}>Exercises</Typography.Title>}
@@ -39,7 +39,7 @@ export default withRouter(observer(({ history }) => {
         loading={loading}
         renderItem={exercise => (
           <Link
-            to={`/exercise/${exercise.id}`}
+            to={`/exercise/${exercise.name}`}
             onClick={() => { exerciseStore.currentExercise = exercise; }}
           >
             <List.Item>
