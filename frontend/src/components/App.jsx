@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { observer } from 'mobx-react';
+
 import MainRouter from './routing/MainRouter';
 import Login from './pages/Login';
 
-export default () => {
-  const isLoggedIn = false;
+import ExerciseContext from '../stores';
 
-  return isLoggedIn ? <MainRouter /> : <Login />;
-};
+import '../networking/authConfig';
+
+
+export default observer(() => {
+  const { authStore } = useContext(ExerciseContext);
+
+  return (authStore.isLoggedin ? <MainRouter /> : <Login />);
+});

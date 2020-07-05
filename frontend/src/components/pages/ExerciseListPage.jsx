@@ -12,6 +12,12 @@ import useNetworkResource from '../../networking/useNetworkResource';
 import listAllExercises from '../../networking/exercises/listAllExercises';
 
 import AddButton from '../ui/AddButton';
+import NetworkingButton from '../ui/NetworkingButton';
+
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
 
 const AddExerciseButton = styled(AddButton)`
   position: absolute;
@@ -25,7 +31,7 @@ const ExerciseList = styled(List)`
 
 export default withRouter(observer(({ history }) => {
   const { loading, error, resource: exercises } = useNetworkResource(listAllExercises);
-  const { exerciseStore } = useContext(ExerciseContext);
+  const { exerciseStore, authStore } = useContext(ExerciseContext);
 
   return (
     <Page>
@@ -33,7 +39,19 @@ export default withRouter(observer(({ history }) => {
       {error && error.message && <div>{JSON.stringify(error.message)}</div>}
       <ExerciseList
         itemLayout="horizontal"
-        header={<Typography.Title level={3}>Exercises</Typography.Title>}
+        header={(
+          <Header>
+            <Typography.Title level={3}>Exercises</Typography.Title>
+            <NetworkingButton
+              buttonProps={{
+              }}
+              text="Logout"
+              loadingText="Logging out..."
+              action={async () => authStore.logout()}
+              onNetworkError={(e) => console.log('Error while logging out: ', e)}
+            />
+          </Header>
+        )}
         dataSource={exercises || []}
         bordered
         loading={loading}

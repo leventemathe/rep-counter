@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { observer } from 'mobx-react';
 import {
   PageHeader, Form, Input, Button,
@@ -6,6 +6,9 @@ import {
 import styled from 'styled-components';
 
 import Page from './Page';
+
+import ExerciseContext from '../../stores';
+
 
 const LoginForm = styled(Form)`
   margin: 16px;
@@ -17,14 +20,18 @@ const LoginForm = styled(Form)`
 `;
 
 export default observer(() => {
-  const loading = false;
+  const { authStore } = useContext(ExerciseContext);
+  const [isLoggingIn, setIsLogginIn] = useState(false);
 
-  const onFinish = () => {
-
+  const onFinish = async (user) => {
+    setIsLogginIn(true);
+    await authStore.login(user.username, user.password);
+    setIsLogginIn(false);
   };
 
-  const onFinishFailed = () => {
-
+  const onFinishFailed = (error) => {
+    // TODO: better error handling
+    console.log(error);
   };
 
   return (
@@ -54,16 +61,16 @@ export default observer(() => {
           name="password"
           rules={[{ required: true, message: 'Please input a password!' }]}
         >
-          <Input />
+          <Input type="password" />
         </Form.Item>
 
         <Form.Item>
           <Button
             type="primary"
             htmlType="submit"
-            disabled={loading}
+            disabled={isLoggingIn}
           >
-            {loading ? 'Loading' : 'Login' }
+            {isLoggingIn ? 'Loading' : 'Login' }
           </Button>
         </Form.Item>
       </LoginForm>
