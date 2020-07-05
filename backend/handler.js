@@ -122,6 +122,7 @@ exports.createExercise = middy(async (event, _context, _callback) => {
 exports.deleteExercise = middy(async (event, _context, _callback) => {
   const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
+
   let scanSessionsParams = {
     TableName: process.env.DYNAMO_DB_EXERCISES_TABLE,
     FilterExpression: 'PK = :pk',
@@ -132,14 +133,14 @@ exports.deleteExercise = middy(async (event, _context, _callback) => {
 
   try {
     const sessions = await dynamoDb.scan(scanSessionsParams).promise();
-    if (sessions && sessions.Items && Array.isArray(sessions.Items || sessions.Items.length > 0)) {
-      await Promise.all(sessions.Items.map(session => dynamoDb.delete({
+    if (sessions && sessions.Items) {
+      await Promise.all(sessions.Items.map(async session => dynamoDb.delete({
         TableName: process.env.DYNAMO_DB_EXERCISES_TABLE,
         Key: {
           PK: session.PK,
           SK: session.SK,
         }
-      })));
+      }).promise()));
     }    
   } catch (deleteError) {
     console.log('There was a problem deleting the exercise sessions: ', deleteError);

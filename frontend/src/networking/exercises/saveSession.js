@@ -6,5 +6,5 @@ export default async (exerciseName, newSession) => {
 
   console.log(newSession);
 
-  return request(paramedUrl, 'POST', null, newSession);
+  return request(paramedUrl, 'POST', undefined, newSession);
 };

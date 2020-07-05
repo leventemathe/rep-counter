@@ -18,7 +18,8 @@ export default (action, trigger) => {
       }
     };
     executeAction();
-  }, [action, trigger]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trigger]);
 
   return {
     loading,

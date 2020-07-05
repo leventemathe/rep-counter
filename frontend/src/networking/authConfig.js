@@ -1,4 +1,7 @@
+/* eslint-disable no-param-reassign */
 import Amplify from 'aws-amplify';
+import axios from 'axios';
+import { getUser } from './auth';
 
 const config = {
   apiGateway: {
@@ -30,3 +33,19 @@ Amplify.configure({
     ],
   },
 });
+
+axios.interceptors.request.use(
+  async conf => {
+    // TODO: rethink this, use store instead?
+    const user = await getUser();
+    const token = user.signInUserSession.idToken.jwtToken;
+    if (token) {
+      conf.headers.Authorization = `Bearer ${token}`;
+    }
+    conf.headers['Content-Type'] = 'application/json';
+    return conf;
+  },
+  error => {
+    Promise.reject(error);
+  },
+);
