@@ -8,6 +8,7 @@
     "@middy/core": "^1.0.0",
     "@middy/http-cors": "^1.0.0",
     "aws-sdk": "^2.709.0",
+    "jsonwebtoken": "^8.5.1",
     "uuid": "^8.2.0"
   },
   "scripts": {

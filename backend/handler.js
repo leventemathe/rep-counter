@@ -2,16 +2,21 @@ const AWS = require('aws-sdk');
 const middy = require('@middy/core');
 const cors = require('@middy/http-cors');
 const { v1: uuidv1 } = require('uuid');
+const jwt = require('jsonwebtoken');
 
-exports.listExercises = middy(async (_event, _context, _callback) => {
-  console.log('EVENT: ', _event);
-  console.log('CONTEXT: ', _context);
+function getUsername(event) {
+  const token = event.headers['Authorization'].split(' ')[1];
 
+  const tokenObj = jwt.decode(token);
+  return tokenObj['cognito:username'];
+}
+
+exports.listExercises = middy(async (event, _context, _callback) => {
   let scanParams = {
     TableName: process.env.DYNAMO_DB_EXERCISES_TABLE,
     FilterExpression: 'PK = :pk',
     ExpressionAttributeValues: {
-      ':pk': 'userId TODO: get user id from cognito token'
+      ':pk': getUsername(event)
     }
   }
 
@@ -91,7 +96,7 @@ exports.createExercise = middy(async (event, _context, _callback) => {
   const putParams = {
     TableName: process.env.DYNAMO_DB_EXERCISES_TABLE,
     Item: {
-      PK: 'userId TODO: get user id from cognito token',
+      PK: getUsername(event),
       SK: exercise.name,
       description: exercise.description,
       timestamp: Date.now(),
@@ -153,7 +158,7 @@ exports.deleteExercise = middy(async (event, _context, _callback) => {
   const deleteExerciseParams = {
     TableName: process.env.DYNAMO_DB_EXERCISES_TABLE,
     Key: {
-      PK: 'userId TODO: get user id from cognito token',
+      PK: getUsername(event),
       SK: event.pathParameters.name,
     }
   }
