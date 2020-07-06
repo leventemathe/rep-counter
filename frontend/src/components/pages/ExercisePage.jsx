@@ -5,19 +5,12 @@ import styled from 'styled-components';
 import { PageHeader } from 'antd';
 
 import ExerciseContext from '../../stores';
-import deleteExercise from '../../networking/exercises/deleteExercise';
 import saveSession from '../../networking/exercises/saveSession';
 
 import Page from './Page';
 import NetworkingButton from '../ui/NetworkingButton';
 import AddButton from '../ui/AddButton';
 import ExerciseControllerGroup from '../exerciseControls/ExerciseControllerGroup';
-
-const DeleteButton = styled(NetworkingButton)`
-  position: absolute;
-  top: 16px;
-  right: 16px;
-`;
 
 const AddSetButton = styled(AddButton)`
   margin: 16px 0;
@@ -33,19 +26,19 @@ const SetArea = styled.div`
   }
 `;
 
-const SaveButton = styled(NetworkingButton)`
-  margin: 32px auto;
-  display: block;
+const ButtonArea = styled.div`
+  width: 100%;
+  margin-top: 32px;
+  margin-bottom: 64px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export default withRouter(({ history }) => {
   const { exerciseStore } = useContext(ExerciseContext);
   const { currentExercise } = exerciseStore;
-
-  const onDeleteFailed = error => {
-    // TODO: pop a modal
-    console.error(error);
-  };
 
   const onSaveFailed = error => {
     // TODO: pop a modal
@@ -98,16 +91,6 @@ export default withRouter(({ history }) => {
         onBack={goBack}
         title={(currentExercise.name) || 'Exercise'}
       />
-      <DeleteButton
-        buttonProps={{
-          danger: true,
-        }}
-        text="Delete"
-        loadingText="Deleting"
-        action={async () => deleteExercise(currentExercise.name)}
-        onNetworkError={onDeleteFailed}
-        onNetworkResourceLoaded={goBack}
-      />
 
       {sets.map((_set, index) => (
         <SetArea key={sets.length - index - 1}>
@@ -116,18 +99,20 @@ export default withRouter(({ history }) => {
         </SetArea>
       ))}
 
-      <SaveButton
-        buttonProps={{
-          size: 'large',
-          type: 'primary',
-          shape: 'round',
-        }}
-        text="Save"
-        loadingText="Saving"
-        action={async () => saveSession(currentExercise.name, { sets })}
-        onNetworkError={onSaveFailed}
-        onNetworkResourceLoaded={goBack}
-      />
+      <ButtonArea>
+        <NetworkingButton
+          buttonProps={{
+            size: 'large',
+            type: 'primary',
+            shape: 'round',
+          }}
+          text="Save"
+          loadingText="Saving"
+          action={async () => saveSession(currentExercise.name, { sets })}
+          onNetworkError={onSaveFailed}
+          onNetworkResourceLoaded={goBack}
+        />
+      </ButtonArea>
     </Page>
   );
 });

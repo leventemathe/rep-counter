@@ -8,6 +8,7 @@ import {
 import ExerciseListPage from '../pages/ExerciseListPage';
 import ExercisePage from '../pages/ExercisePage';
 import NewExercisePage from '../pages/NewExercisePage';
+import EditExercisePage from '../pages/EditExercisePage';
 
 export default () => (
   <Router>
@@ -20,6 +21,9 @@ export default () => (
       </Route>
       <Route path="/exercise/:id" exact>
         <ExercisePage />
+      </Route>
+      <Route path="/exercise/edit/:id" exact>
+        <EditExercisePage />
       </Route>
     </Switch>
   </Router>

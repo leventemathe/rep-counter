@@ -4,6 +4,8 @@ import { observer } from 'mobx-react';
 import { withRouter, Link } from 'react-router-dom';
 
 import { List, Typography } from 'antd';
+import { EditOutlined } from '@ant-design/icons';
+
 
 import ExerciseContext from '../../stores';
 import Page from './Page';
@@ -54,19 +56,29 @@ export default withRouter(observer(({ history }) => {
         )}
         dataSource={exercises || []}
         bordered
+        split
         loading={loading}
         renderItem={exercise => (
-          <Link
-            to={`/exercise/${exercise.name}`}
-            onClick={() => { exerciseStore.currentExercise = exercise; }}
+          <List.Item
+            actions={[
+              <Link
+                to={`/exercise/edit/${exercise.name}`}
+                onClick={() => { exerciseStore.exerciseToEdit = exercise; }}
+              >
+                <EditOutlined />
+              </Link>,
+            ]}
           >
-            <List.Item>
+            <Link
+              to={`/exercise/${exercise.name}`}
+              onClick={() => { exerciseStore.currentExercise = exercise; }}
+            >
               <List.Item.Meta
                 title={exercise.name}
                 description={exercise.description}
               />
-            </List.Item>
-          </Link>
+            </Link>
+          </List.Item>
         )}
       />
 
