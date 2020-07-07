@@ -9,12 +9,15 @@ import deleteExercise from '../../networking/exercises/deleteExercise';
 
 import Page from './Page';
 import NetworkingButton from '../ui/NetworkingButton';
+import ExerciseForm from '../forms/ExerciseForm';
 
 
 const ButtonArea = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  margin-top: 64px;
 `;
 
 export default withRouter(({ history }) => {
@@ -44,12 +47,23 @@ export default withRouter(({ history }) => {
         title={`Edit ${(exerciseToEdit.name) || 'Exercise'}`}
       />
 
+      <ExerciseForm
+        initialValues={{
+          name: exerciseToEdit.name,
+          description: exerciseToEdit.description,
+        }}
+        action={exercise => {
+          console.log(exercise);
+          history.goBack();
+        }}
+      />
+
       <ButtonArea>
         <NetworkingButton
           buttonProps={{
             danger: true,
           }}
-          text="Delete"
+          text="Delete Exercise"
           loadingText="Deleting"
           action={async () => deleteExercise(exerciseToEdit.name)}
           onNetworkError={onDeleteFailed}

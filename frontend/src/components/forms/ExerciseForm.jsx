@@ -14,7 +14,7 @@ const NewExerciseFormStyles = styled(Form)`
   }
 `;
 
-const NewExerciseForm = ({ action }) => {
+const NewExerciseForm = ({ action, initialValues }) => {
   const [loading, setLoading] = useState(false);
 
   const onFinish = async (exercise) => {
@@ -38,7 +38,7 @@ const NewExerciseForm = ({ action }) => {
     <NewExerciseFormStyles
       name="newExercise"
       hideRequiredMark
-      initialValues={{ remember: true }}
+      initialValues={initialValues}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
     >

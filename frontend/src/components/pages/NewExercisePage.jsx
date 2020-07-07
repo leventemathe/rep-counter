@@ -18,10 +18,11 @@ export default withRouter(observer(({ history }) => (
       onBack={() => history.goBack()}
       title="New Exercise"
     />
-    <ExerciseForm action={async exercise => {
-      await createNewExercise(exercise);
-      history.goBack();
-    }}
+    <ExerciseForm
+      action={async exercise => {
+        await createNewExercise(exercise);
+        history.goBack();
+      }}
     />
   </Page>
 )));
