@@ -53,7 +53,7 @@ functions:
     events:
       - http:
           method: post
-          path: /v1/exercises/create
+          path: /v1/exercises
           cors: true
           request:
             schema:
@@ -63,7 +63,22 @@ functions:
             authorizerId:
               Ref: RepCounterAuthorizer
 
-  delete:
+  editExercise:
+    handler: handler.editExercise
+    events:
+      - http:
+          method: put
+          path: /v1/exercises/{name}
+          cors: true
+          request:
+            schema:
+              application/json: ${file(createExercise.json)}
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: RepCounterAuthorizer
+
+  deleteExercise:
     handler: handler.deleteExercise
     events:
       - http:

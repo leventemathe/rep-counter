@@ -124,6 +124,43 @@ exports.createExercise = middy(async (event, _context, _callback) => {
 
 
 
+exports.editExercise = middy(async (event, _context, _callback) => {
+  const exercise = JSON.parse(event.body);
+
+  const updateParams = {
+    TableName: process.env.DYNAMO_DB_EXERCISES_TABLE,
+    Key: {
+      PK: getUsername(event),
+      SK: event.pathParameters.name,
+    },
+    // UpdateExpression: 'set SK = :name, description = :description',
+    UpdateExpression: 'set description = :description',
+    ExpressionAttributeValues: {
+      // ':name': exercise.name,
+      ':description': exercise.description
+    },
+  }
+  
+  try {
+    const dynamoDb = new AWS.DynamoDB.DocumentClient();
+    await dynamoDb.update(updateParams).promise();
+  } catch (updateError) {
+    console.log('There was a problem updating the exercise: ', updateError);
+    console.log('updateError: ', updateError);
+    return {
+      statusCode: 500,
+      body: 'There was a problem updating the exercise.',
+    }
+  }
+
+  return {
+    statusCode: 200,
+    body: 'Exercise succesfully updated',
+  }
+}).use(cors());
+
+
+
 exports.deleteExercise = middy(async (event, _context, _callback) => {
   const dynamoDb = new AWS.DynamoDB.DocumentClient();
 

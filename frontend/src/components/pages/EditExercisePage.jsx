@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import ExerciseContext from '../../stores';
 import deleteExercise from '../../networking/exercises/deleteExercise';
 
+import updateExercise from '../../networking/exercises/updateExercise';
 import Page from './Page';
 import NetworkingButton from '../ui/NetworkingButton';
 import ExerciseForm from '../forms/ExerciseForm';
@@ -52,8 +53,8 @@ export default withRouter(({ history }) => {
           name: exerciseToEdit.name,
           description: exerciseToEdit.description,
         }}
-        action={exercise => {
-          console.log(exercise);
+        action={async exercise => {
+          await updateExercise(exerciseToEdit.name, exercise);
           history.goBack();
         }}
       />
