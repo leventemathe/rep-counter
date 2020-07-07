@@ -1,5 +1,27 @@
-user:
+exercise:
   PK: userId
+  SK: uuid
+  name: exerciseName
+  description: short description of exercise
+
+session:
+  PK: exercise.SK
+  SK: uuid
+  sets: [
+    {
+      reps: 10
+      weight: 40
+    },
+    {
+      reps: 10
+      weight: 40
+    }
+  ]
+
+
+
+
+Old:
 
 exercise:
   PK: userId
