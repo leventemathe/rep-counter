@@ -11,7 +11,7 @@ function getUsername(event) {
   return tokenObj['cognito:username'];
 }
 
-exports.listExercises = middy(async (event) => {
+async function getExercises(event) {
   const scanParams = {
     TableName: process.env.DYNAMO_DB_EXERCISES_TABLE,
     FilterExpression: 'PK = :pk',
@@ -24,6 +24,7 @@ exports.listExercises = middy(async (event) => {
   try {
     const dynamoDb = new AWS.DynamoDB.DocumentClient();
     exercises = await dynamoDb.scan(scanParams).promise();
+    return exercises;
   } catch (scanError) {
     console.log('There was a problem getting the exercises: ', scanError);
     return {
@@ -31,6 +32,11 @@ exports.listExercises = middy(async (event) => {
       body: 'There was a problem getting the exercises.',
     };
   }
+}
+
+exports.listExercises = middy(async (event) => {
+  const exercises = await getExercises(event);
+  if (exercises.statusCode) return exercises;
 
   if (!exercises.Items || !Array.isArray(exercises.Items || exercises.Items.length === 0)) {
     return {
@@ -129,6 +135,7 @@ exports.createExercise = middy(async (event) => {
       SK: uuidv1(),
       name: exercise.name,
       description: exercise.description,
+      categoires: exercise.categoires,
       timestamp: Date.now(),
     },
   };
@@ -161,10 +168,11 @@ exports.editExercise = middy(async (event) => {
       PK: getUsername(event),
       SK: event.pathParameters.id,
     },
-    UpdateExpression: 'set #name = :name, description = :description, editTimestamp = :editTimestamp',
+    UpdateExpression: 'set #name = :name, description = :description, editTimestamp = :editTimestamp, categories = :categories',
     ExpressionAttributeValues: {
       ':name': exercise.name,
       ':description': exercise.description,
+      ':categories': exercise.categories,
       ':editTimestamp': Date.now(),
     },
     ExpressionAttributeNames: {
@@ -271,5 +279,25 @@ exports.addSessionToExercise = middy(async (event) => {
   return {
     statusCode: 200,
     body: 'Succesfully added session to exercise.',
+  };
+}).use(cors());
+
+exports.listCategories = middy(async (event) => {
+  const exercises = await getExercises(event);
+  if (exercises.statusCode) return exercises;
+
+  if (!exercises.Items || !Array.isArray(exercises.Items || exercises.Items.length === 0)) {
+    return {
+      statusCode: 404,
+      body: 'There are no categories, because there are no exercises.',
+    };
+  }
+
+  const categoires = new Set();
+  exercises.Items.forEach(exercise => categoires.add(exercise));
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify([...categoires]),
   };
 }).use(cors());

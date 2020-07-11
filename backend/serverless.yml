@@ -105,6 +105,18 @@ functions:
             authorizerId:
               Ref: RepCounterAuthorizer
 
+  listCategories:
+    handler: handler.listCategories
+    events:
+      - http:
+          method: get
+          path: /v1/exercises/categories
+          cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: RepCounterAuthorizer              
+
 
 
 resources:

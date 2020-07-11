@@ -13,6 +13,14 @@
     "description": {
       "type": "string",
       "title": "A more detailed description of the exercise"
+    },
+    "categories": {
+      "type": "array",
+      "title": "A list of categories the exercise belongs to",
+      "items": {
+        "type": "string",
+        "minLength": 2
+      }
     }
   }
 }

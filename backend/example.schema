@@ -3,6 +3,7 @@ exercise:
   SK: uuid
   name: exerciseName
   description: short description of exercise
+  categories: [exerciseCategory1, exerciseCategory2]
 
 session:
   PK: exercise.SK
