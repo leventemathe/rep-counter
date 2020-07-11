@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import {
   Form, Input, Button,
 } from 'antd';
+import CategorySelector from './CategorySelector';
 
 const NewExerciseFormStyles = styled(Form)`
   margin: 16px;
@@ -17,10 +18,14 @@ const NewExerciseFormStyles = styled(Form)`
 const NewExerciseForm = ({ action, initialValues }) => {
   const [loading, setLoading] = useState(false);
 
+  const [category, setCategory] = useState(undefined);
+
   const onFinish = async (exercise) => {
     try {
       setLoading(true);
-      await action(exercise);
+      const newExercise = { ...exercise, categories: [exercise.category] };
+      console.log(newExercise);
+      await action(newExercise);
     } catch (error) {
       // TODO: better error handling
       console.error(error);
@@ -55,6 +60,16 @@ const NewExerciseForm = ({ action, initialValues }) => {
         name="description"
       >
         <Input placeholder="optional" />
+      </Form.Item>
+
+      <Form.Item
+        label="Category"
+        name="category"
+      >
+        <CategorySelector
+          category={category}
+          onChange={setCategory}
+        />
       </Form.Item>
 
       <Form.Item>

@@ -135,7 +135,7 @@ exports.createExercise = middy(async (event) => {
       SK: uuidv1(),
       name: exercise.name,
       description: exercise.description,
-      categoires: exercise.categoires,
+      categories: exercise.categories,
       timestamp: Date.now(),
     },
   };
@@ -293,11 +293,11 @@ exports.listCategories = middy(async (event) => {
     };
   }
 
-  const categoires = new Set();
-  exercises.Items.forEach(exercise => categoires.add(exercise));
+  const categories = new Set();
+  exercises.Items.forEach(exercise => exercise.categories.forEach(cat => categories.add(cat)));
 
   return {
     statusCode: 200,
-    body: JSON.stringify([...categoires]),
+    body: JSON.stringify([...categories]),
   };
 }).use(cors());

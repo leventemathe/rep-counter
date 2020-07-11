@@ -22,7 +22,7 @@ const Header = styled.div`
 `;
 
 const AddExerciseButton = styled(AddButton)`
-  position: absolute;
+  position: fixed;
   bottom: 32px;
   right: 32px;
 `;
