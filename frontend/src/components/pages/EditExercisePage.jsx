@@ -52,6 +52,7 @@ export default withRouter(({ history }) => {
         initialValues={{
           name: exerciseToEdit.name,
           description: exerciseToEdit.description,
+          category: exerciseToEdit.categories && exerciseToEdit.categories[0],
         }}
         action={async exercise => {
           await updateExercise(exerciseToEdit.id, exercise);

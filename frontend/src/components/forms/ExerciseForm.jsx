@@ -18,13 +18,12 @@ const NewExerciseFormStyles = styled(Form)`
 const NewExerciseForm = ({ action, initialValues }) => {
   const [loading, setLoading] = useState(false);
 
-  const [category, setCategory] = useState(undefined);
+  const [category, setCategory] = useState(initialValues.category);
 
   const onFinish = async (exercise) => {
     try {
       setLoading(true);
-      const newExercise = { ...exercise, categories: [exercise.category] };
-      console.log(newExercise);
+      const newExercise = exercise.category ? { ...exercise, categories: [exercise.category] } : exercise;
       await action(newExercise);
     } catch (error) {
       // TODO: better error handling

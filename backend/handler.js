@@ -51,6 +51,7 @@ exports.listExercises = middy(async (event) => {
       id: exercise.SK,
       name: exercise.name,
       description: exercise.description,
+      categories: exercise.categories,
     }))),
   };
 }).use(cors());
