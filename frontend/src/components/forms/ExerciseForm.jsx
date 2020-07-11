@@ -18,7 +18,7 @@ const NewExerciseFormStyles = styled(Form)`
 const NewExerciseForm = ({ action, initialValues }) => {
   const [loading, setLoading] = useState(false);
 
-  const [category, setCategory] = useState(initialValues.category);
+  const [category, setCategory] = useState(initialValues?.category);
 
   const onFinish = async (exercise) => {
     try {
