@@ -1,8 +1,9 @@
 import request from '../request';
 
-export default async (exerciseName, newSession) => {
-  const url = process.env.REACT_APP_URL_NEW_SESSION || 'https://f0cc6clsqf.execute-api.eu-central-1.amazonaws.com/dev/v1/exercises/addSession';
-  const paramedUrl = `${url}/${exerciseName}`;
+export default async (exerciseId, newSession) => {
+  const url = process.env.REACT_APP_URL_NEW_SESSION;
+  if (!url) throw new Error('No add sessions url found');
+  const paramedUrl = `${url}/${exerciseId}`;
 
   console.log(newSession);
 

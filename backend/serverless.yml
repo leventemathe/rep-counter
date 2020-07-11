@@ -36,12 +36,12 @@ functions:
             authorizerId:
               Ref: RepCounterAuthorizer
 
-  getSessionsForExercise:
-    handler: handler.getSessionsForExercise
+  getExercise:
+    handler: handler.getExercise
     events:
       - http:
           method: get
-          path: /v1/exercises/{name}
+          path: /v1/exercises/{id}
           cors: true
           authorizer:
             type: COGNITO_USER_POOLS
@@ -68,7 +68,7 @@ functions:
     events:
       - http:
           method: put
-          path: /v1/exercises/{name}
+          path: /v1/exercises/{id}
           cors: true
           request:
             schema:
@@ -83,7 +83,7 @@ functions:
     events:
       - http:
           method: delete
-          path: /v1/exercises/{name}
+          path: /v1/exercises/{id}
           cors: true
           authorizer:
             type: COGNITO_USER_POOLS
@@ -95,7 +95,7 @@ functions:
     events:
       - http:
           method: post
-          path: /v1/exercises/addSession/{exerciseName}
+          path: /v1/exercises/addSession/{exerciseId}
           cors: true
           request:
             schema:

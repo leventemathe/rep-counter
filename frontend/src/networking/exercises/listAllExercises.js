@@ -1,7 +1,8 @@
 import request from '../request';
 
 export default async () => {
-  const url = process.env.REACT_APP_URL_LIST_EXERCISES || ' https://f0cc6clsqf.execute-api.eu-central-1.amazonaws.com/dev/v1/exercises';
+  const url = process.env.REACT_APP_URL_LIST_EXERCISES;
+  if (!url) throw new Error('No list exercises url found');
 
   return request(url);
 };

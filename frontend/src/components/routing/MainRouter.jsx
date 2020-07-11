@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom';
 
 import ExerciseListPage from '../pages/ExerciseListPage';
-import ExercisePage from '../pages/ExercisePage';
+import ExerciseSessionPage from '../pages/ExerciseSessionPage';
 import NewExercisePage from '../pages/NewExercisePage';
 import EditExercisePage from '../pages/EditExercisePage';
 
@@ -20,7 +20,7 @@ export default () => (
         <NewExercisePage />
       </Route>
       <Route path="/exercise/:id" exact>
-        <ExercisePage />
+        <ExerciseSessionPage />
       </Route>
       <Route path="/exercise/edit/:id" exact>
         <EditExercisePage />

@@ -5,13 +5,13 @@ import { getUser } from './auth';
 
 const config = {
   apiGateway: {
-    REGION: 'eu-central-1',
-    URL: process.env.API_BASE_URL || 'https://f0cc6clsqf.execute-api.eu-central-1.amazonaws.com/dev',
+    REGION: process.env.REACT_APP_AWS_REGION,
+    URL: process.env.REACT_APP_API_GATEWAY_BASE_URL,
   },
   cognito: {
-    REGION: 'eu-central-1',
-    USER_POOL_ID: process.env.USER_POOL_ID || 'eu-central-1_rQJIRknvf',
-    APP_CLIENT_ID: process.env.APP_CLIENT_ID || '753vl3j4tirqpcbaf621qhg5h0',
+    REGION: process.env.REACT_APP_AWS_REGION,
+    USER_POOL_ID: process.env.REACT_APP_USER_POOL_ID,
+    APP_CLIENT_ID: process.env.REACT_APP_APP_CLIENT_ID,
   },
 };
 

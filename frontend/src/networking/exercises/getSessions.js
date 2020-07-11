@@ -1,8 +1,9 @@
 import request from '../request';
 
-export default async (exerciseName) => {
-  const url = process.env.REACT_APP_URL_GET_SESSIONS || 'https://f0cc6clsqf.execute-api.eu-central-1.amazonaws.com/dev/v1/exercises';
-  const paramedUrl = `${url}/${exerciseName}`;
+export default async (exerciseId) => {
+  const url = process.env.REACT_APP_URL_GET_EXERICSE;
+  if (!url) throw new Error('No new get exercise url found');
+  const paramedUrl = `${url}/${exerciseId}`;
 
   return request(paramedUrl);
 };

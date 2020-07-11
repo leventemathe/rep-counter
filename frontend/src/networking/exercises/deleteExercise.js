@@ -1,8 +1,9 @@
 import request from '../request';
 
-export default async (name) => {
-  const url = process.env.REACT_APP_URL_DELETE_EXERCISE || 'https://f0cc6clsqf.execute-api.eu-central-1.amazonaws.com/dev/v1/exercises';
-  const paramedUrl = `${url}/${name}`;
+export default async (id) => {
+  const url = process.env.REACT_APP_URL_DELETE_EXERCISE;
+  if (!url) throw new Error('No delete exercise url found');
+  const paramedUrl = `${url}/${id}`;
 
   return request(paramedUrl, 'DELETE');
 };

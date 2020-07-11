@@ -54,7 +54,7 @@ export default withRouter(({ history }) => {
           description: exerciseToEdit.description,
         }}
         action={async exercise => {
-          await updateExercise(exerciseToEdit.name, exercise);
+          await updateExercise(exerciseToEdit.id, exercise);
           history.goBack();
         }}
       />
@@ -66,7 +66,7 @@ export default withRouter(({ history }) => {
           }}
           text="Delete Exercise"
           loadingText="Deleting"
-          action={async () => deleteExercise(exerciseToEdit.name)}
+          action={async () => deleteExercise(exerciseToEdit.id)}
           onNetworkError={onDeleteFailed}
           onNetworkResourceLoaded={goBack}
         />

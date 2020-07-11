@@ -108,7 +108,7 @@ export default withRouter(({ history }) => {
           }}
           text="Save"
           loadingText="Saving"
-          action={async () => saveSession(currentExercise.name, { sets })}
+          action={async () => saveSession(currentExercise.id, { sets })}
           onNetworkError={onSaveFailed}
           onNetworkResourceLoaded={goBack}
         />

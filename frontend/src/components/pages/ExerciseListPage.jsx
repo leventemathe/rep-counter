@@ -62,7 +62,7 @@ export default withRouter(observer(({ history }) => {
           <List.Item
             actions={[
               <Link
-                to={`/exercise/edit/${exercise.name}`}
+                to={`/exercise/edit/${exercise.id}`}
                 onClick={() => { exerciseStore.exerciseToEdit = exercise; }}
               >
                 <EditOutlined />
@@ -70,7 +70,7 @@ export default withRouter(observer(({ history }) => {
             ]}
           >
             <Link
-              to={`/exercise/${exercise.name}`}
+              to={`/exercise/${exercise.id}`}
               onClick={() => { exerciseStore.currentExercise = exercise; }}
             >
               <List.Item.Meta
