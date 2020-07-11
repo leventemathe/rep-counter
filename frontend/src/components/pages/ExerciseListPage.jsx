@@ -52,14 +52,39 @@ export default withRouter(observer(({ history }) => {
 
   const { exerciseStore, authStore } = useContext(ExerciseContext);
 
-  useEffect(() => {
-    if (!exercises) return;
+  const sortExercisesByCategory = flatExercises => {
+    const otherCategoryName = 'Other';
 
-    setExercisesByCategory(exercises.reduce((accum, curr) => {
-      const category = (curr.categories && curr.categories.length > 0) ? curr.categories[0] : 'Other';
+    // Get the exercises into object by array
+    const exercisesByCategoryObj = flatExercises.reduce((accum, curr) => {
+      const category = (curr.categories && curr.categories.length > 0) ? curr.categories[0] : otherCategoryName;
       if (accum[category]) return { ...accum, [category]: [...accum[category], curr] };
       return { ...accum, [category]: [curr] };
-    }, {}));
+    }, {});
+
+    // Move the object into an array, so we can sort by category name
+    const exercisesByCategoryArr = Object.keys(exercisesByCategoryObj)
+      .filter(key => key !== otherCategoryName)
+      .map(key => ({
+        category: key,
+        exercise: exercisesByCategoryObj[key],
+      }));
+
+    // Sort the array by category, and insert "other" into the last place
+    exercisesByCategoryArr.sort((a, b) => (a.category > b.category ? 1 : -1));
+    if (exercisesByCategoryObj[otherCategoryName]) {
+      exercisesByCategoryArr.push({
+        category: otherCategoryName,
+        exercise: exercisesByCategoryObj[otherCategoryName],
+      });
+    }
+
+    return exercisesByCategoryArr;
+  };
+
+  useEffect(() => {
+    if (!exercises) return;
+    setExercisesByCategory(sortExercisesByCategory(exercises));
   }, [exercises]);
 
   return (
@@ -79,11 +104,11 @@ export default withRouter(observer(({ history }) => {
       {error && error.message && <div>{JSON.stringify(error.message)}</div>}
 
       <CollapsibleList defaultActiveKey={['0']}>
-        {Object.keys(exercisesByCategory).map((key, index) => (
-          <Panel header={key} key={`${index}`}>
+        {exercisesByCategory.map((exerciseByCategory, index) => (
+          <Panel header={exerciseByCategory.category} key={`${index}`}>
             <ExerciseList
               itemLayout="horizontal"
-              dataSource={exercisesByCategory[key] || []}
+              dataSource={exerciseByCategory.exercise || []}
               bordered
               split
               loading={loading}
