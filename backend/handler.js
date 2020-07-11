@@ -172,7 +172,7 @@ exports.editExercise = middy(async (event) => {
     ExpressionAttributeValues: {
       ':name': exercise.name,
       ':description': exercise.description,
-      ':categories': exercise.categories,
+      ':categories': exercise.categories || [],
       ':editTimestamp': Date.now(),
     },
     ExpressionAttributeNames: {
