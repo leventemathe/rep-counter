@@ -5,20 +5,20 @@ const { v1: uuidv1 } = require('uuid');
 const jwt = require('jsonwebtoken');
 
 function getUsername(event) {
-  const token = event.headers['Authorization'].split(' ')[1];
+  const token = event.headers.Authorization.split(' ')[1];
 
   const tokenObj = jwt.decode(token);
   return tokenObj['cognito:username'];
 }
 
-exports.listExercises = middy(async (event, _context, _callback) => {
-  let scanParams = {
+exports.listExercises = middy(async (event) => {
+  const scanParams = {
     TableName: process.env.DYNAMO_DB_EXERCISES_TABLE,
     FilterExpression: 'PK = :pk',
     ExpressionAttributeValues: {
-      ':pk': getUsername(event)
-    }
-  }
+      ':pk': getUsername(event),
+    },
+  };
 
   let exercises;
   try {
@@ -29,29 +29,27 @@ exports.listExercises = middy(async (event, _context, _callback) => {
     return {
       statusCode: 500,
       body: 'There was a problem getting the exercises.',
-    }
+    };
   }
 
   if (!exercises.Items || !Array.isArray(exercises.Items || exercises.Items.length === 0)) {
     return {
       statusCode: 404,
       body: 'There are no exercises.',
-    }
+    };
   }
 
   return {
     statusCode: 200,
-    body: JSON.stringify(exercises.Items.map(exercise => ({ 
+    body: JSON.stringify(exercises.Items.map(exercise => ({
       id: exercise.SK,
       name: exercise.name,
       description: exercise.description,
     }))),
-  }
+  };
 }).use(cors());
 
-
-
-exports.getExercise = middy(async (event, _context, _callback) => {
+exports.getExercise = middy(async (event) => {
   const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
   const exerciseGetParams = {
@@ -59,51 +57,51 @@ exports.getExercise = middy(async (event, _context, _callback) => {
     Key: {
       PK: getUsername(event),
       SK: event.pathParameters.id,
-    }
-  }
+    },
+  };
 
   let exercise;
-  try {    
+  try {
     exercise = await dynamoDb.get(exerciseGetParams).promise();
   } catch (getError) {
     console.log('There was a problem getting the exercise: ', getError);
     return {
       statusCode: 500,
       body: 'There was a problem getting the exercise',
-    }
+    };
   }
 
   if (!exercise || !exercise.Item) {
     return {
       statusCode: 404,
       body: 'Exercise not found',
-    }
+    };
   }
 
   const sessionScanParams = {
     TableName: process.env.DYNAMO_DB_EXERCISES_TABLE,
     FilterExpression: 'PK = :pk',
     ExpressionAttributeValues: {
-      ':pk': event.pathParameters.id
-    }
-  }
+      ':pk': event.pathParameters.id,
+    },
+  };
 
   let sessions;
-  try {    
+  try {
     sessions = await dynamoDb.scan(sessionScanParams).promise();
   } catch (getError) {
     console.log('There was a problem getting the exercise: ', getError);
     return {
       statusCode: 500,
       body: 'There was a problem getting the exercise',
-    }
+    };
   }
 
   if (!sessions.Items || !Array.isArray(sessions.Items || sessions.Items.length === 0)) {
     return {
       statusCode: 404,
       body: 'There are no sessions.',
-    }
+    };
   }
 
   return {
@@ -112,19 +110,16 @@ exports.getExercise = middy(async (event, _context, _callback) => {
       exercise: {
         name: exercise.name,
         description: exercise.description,
-        sessions: sessions.Items.map(session => ({ 
+        sessions: sessions.Items.map(session => ({
           sets: session.sets,
           timestamp: session.timestamp,
-        }))
-      }
+        })),
+      },
     }),
-  }
+  };
 }).use(cors());
 
-
-
-exports.createExercise = middy(async (event, _context, _callback) => {
-  // Manual validation here is no longer necessary, because a schema was passed to this Api Gateway endpoint
+exports.createExercise = middy(async (event) => {
   const exercise = JSON.parse(event.body);
 
   const putParams = {
@@ -135,10 +130,10 @@ exports.createExercise = middy(async (event, _context, _callback) => {
       name: exercise.name,
       description: exercise.description,
       timestamp: Date.now(),
-    }
-  }
-  
-  let createdExercise = {}
+    },
+  };
+
+  let createdExercise;
   try {
     const dynamoDb = new AWS.DynamoDB.DocumentClient();
     createdExercise = await dynamoDb.put(putParams).promise();
@@ -148,18 +143,16 @@ exports.createExercise = middy(async (event, _context, _callback) => {
     return {
       statusCode: 500,
       body: 'There was a problem creating the exercise.',
-    }
+    };
   }
 
   return {
     statusCode: 201,
     body: JSON.stringify(createdExercise),
-  }
+  };
 }).use(cors());
 
-
-
-exports.editExercise = middy(async (event, _context, _callback) => {
+exports.editExercise = middy(async (event) => {
   const exercise = JSON.parse(event.body);
 
   const updateParams = {
@@ -176,9 +169,9 @@ exports.editExercise = middy(async (event, _context, _callback) => {
     },
     ExpressionAttributeNames: {
       '#name': 'name',
-    }
-  }
-  
+    },
+  };
+
   try {
     const dynamoDb = new AWS.DynamoDB.DocumentClient();
     await dynamoDb.update(updateParams).promise();
@@ -187,27 +180,25 @@ exports.editExercise = middy(async (event, _context, _callback) => {
     return {
       statusCode: 500,
       body: 'There was a problem updating the exercise.',
-    }
+    };
   }
 
   return {
     statusCode: 200,
     body: 'Exercise succesfully updated',
-  }
+  };
 }).use(cors());
 
-
-
-exports.deleteExercise = middy(async (event, _context, _callback) => {
+exports.deleteExercise = middy(async (event) => {
   const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-  let scanSessionsParams = {
+  const scanSessionsParams = {
     TableName: process.env.DYNAMO_DB_EXERCISES_TABLE,
     FilterExpression: 'PK = :pk',
     ExpressionAttributeValues: {
-      ':pk': event.pathParameters.id
-    }
-  }
+      ':pk': event.pathParameters.id,
+    },
+  };
 
   try {
     const sessions = await dynamoDb.scan(scanSessionsParams).promise();
@@ -217,15 +208,15 @@ exports.deleteExercise = middy(async (event, _context, _callback) => {
         Key: {
           PK: session.PK,
           SK: session.SK,
-        }
+        },
       }).promise()));
-    }    
+    }
   } catch (deleteError) {
     console.log('There was a problem deleting the exercise sessions: ', deleteError);
     return {
       statusCode: 500,
       body: 'There was a problem deleting the exercise sessions.',
-    }
+    };
   }
 
   const deleteExerciseParams = {
@@ -233,8 +224,8 @@ exports.deleteExercise = middy(async (event, _context, _callback) => {
     Key: {
       PK: getUsername(event),
       SK: event.pathParameters.id,
-    }
-  }
+    },
+  };
 
   try {
     await dynamoDb.delete(deleteExerciseParams).promise();
@@ -243,19 +234,17 @@ exports.deleteExercise = middy(async (event, _context, _callback) => {
     return {
       statusCode: 500,
       body: 'There was a problem deleting the exercise.',
-    }
-  }  
+    };
+  }
 
   return {
     statusCode: 200,
     body: 'Successfully deleted exercise with all its sessions.',
-  }
+  };
 }).use(cors());
 
-
-
-exports.addSessionToExercise = middy(async (event, _context, _callback) => {  
-  let session = JSON.parse(event.body);
+exports.addSessionToExercise = middy(async (event) => {
+  const session = JSON.parse(event.body);
 
   const createSessionParams = {
     TableName: process.env.DYNAMO_DB_EXERCISES_TABLE,
@@ -264,24 +253,23 @@ exports.addSessionToExercise = middy(async (event, _context, _callback) => {
       SK: uuidv1(),
       sets: session.sets,
       timestamp: Date.now(),
-    }
-  }
+    },
+  };
 
   try {
     const dynamoDb = new AWS.DynamoDB.DocumentClient();
     await dynamoDb.put(createSessionParams).promise();
   } catch (putError) {
     console.log('There was a problem creating the session: ', putError);
-    console.log('createSessionParams: ', putParams);
+    console.log('createSessionParams: ', createSessionParams);
     return {
       statusCode: 500,
       body: 'There was a problem creating the session.',
-    }
+    };
   }
 
   return {
     statusCode: 200,
     body: 'Succesfully added session to exercise.',
-  }
+  };
 }).use(cors());
-
