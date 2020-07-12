@@ -93,6 +93,7 @@ export default withRouter(({ history }) => {
   //       {
   //         weight,
   //         reps,
+  //         help,
   //       }
   //     ]
   //   }
@@ -100,7 +101,8 @@ export default withRouter(({ history }) => {
   const sessions = exercise ? exercise.exercise.sessions : [];
 
   const magicScores = sessions.reduce((accum, session) => {
-    const magicScore = session.sets.reduce((setAccum, set) => setAccum + set.weight * set.reps, 0);
+    sessions.sort((a, b) => a.timestamp - b.timestamp);
+    const magicScore = session.sets.reduce((setAccum, set) => setAccum + (set.weight * set.reps) - ((set.weight / 2) * set.help), 0);
     return [...accum, { magicScore, date: session.timestamp }];
   }, []);
 
