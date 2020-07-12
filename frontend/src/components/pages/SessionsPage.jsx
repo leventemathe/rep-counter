@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import { PageHeader, Typography } from 'antd';
 import {
-  AreaChart, XAxis, YAxis, CartesianGrid, Area, Tooltip, Legend, ResponsiveContainer,
+  AreaChart, XAxis, YAxis, CartesianGrid, Area, Tooltip, ResponsiveContainer,
 } from 'recharts';
 
 import Page from './Page';
