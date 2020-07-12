@@ -295,7 +295,9 @@ exports.listCategories = middy(async (event) => {
   }
 
   const categories = new Set();
-  exercises.Items.forEach(exercise => exercise.categories.forEach(cat => categories.add(cat)));
+  exercises.Items
+    .filter(exercise => exercise.categories && exercise.categories.length > 0)
+    .forEach(exercise => exercise.categories.forEach(cat => categories.add(cat)));
 
   return {
     statusCode: 200,
