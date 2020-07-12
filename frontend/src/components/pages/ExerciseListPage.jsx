@@ -6,7 +6,7 @@ import { withRouter, Link } from 'react-router-dom';
 import {
   List, Typography, Collapse, PageHeader,
 } from 'antd';
-import { EditOutlined } from '@ant-design/icons';
+import { EditOutlined, BarChartOutlined } from '@ant-design/icons';
 
 
 import ExerciseContext from '../../stores';
@@ -115,6 +115,12 @@ export default withRouter(observer(({ history }) => {
               renderItem={exercise => (
                 <List.Item
                   actions={[
+                    <Link
+                      to={`/exercise/sessions/${exercise.id}`}
+                      onClick={() => { exerciseStore.currentExercise = exercise; }}
+                    >
+                      <BarChartOutlined />
+                    </Link>,
                     <Link
                       to={`/exercise/edit/${exercise.id}`}
                       onClick={() => { exerciseStore.exerciseToEdit = exercise; }}

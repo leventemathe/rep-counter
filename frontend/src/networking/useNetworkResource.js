@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 export default (action, trigger) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [resource, setResource] = useState(null);
 

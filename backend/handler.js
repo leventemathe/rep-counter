@@ -115,8 +115,8 @@ exports.getExercise = middy(async (event) => {
     statusCode: 200,
     body: JSON.stringify({
       exercise: {
-        name: exercise.name,
-        description: exercise.description,
+        name: exercise.Item.name,
+        description: exercise.Item.description,
         sessions: sessions.Items.map(session => ({
           sets: session.sets,
           timestamp: session.timestamp,
