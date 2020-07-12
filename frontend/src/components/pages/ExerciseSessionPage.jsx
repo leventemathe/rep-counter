@@ -53,6 +53,7 @@ export default withRouter(({ history }) => {
   const [sets, setSets] = useState([{
     weight: (currentExercise && currentExercise.weight) || 0,
     reps: 0,
+    help: 0,
   }]);
 
   const createNewSet = () => ({ ...(sets[sets.length - 1]) });

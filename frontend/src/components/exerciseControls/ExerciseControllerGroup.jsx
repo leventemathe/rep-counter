@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components';
 import { Typography } from 'antd';
 
 import ExerciseController from './ExerciseController';
+import HelpController from './HelpController';
 
 const Styles = styled.div`
   display: flex;
@@ -59,6 +60,12 @@ export default ({
         setIndex={index}
         value="weight"
         adjustSet={adjustSet}
+      />
+      <HelpController
+        adjustSet={adjustSet}
+        set={sets[index]}
+        setIndex={index}
+        value="help"
       />
     </Styles>
   );
