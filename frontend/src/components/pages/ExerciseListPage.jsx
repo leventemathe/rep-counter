@@ -123,13 +123,13 @@ export default withRouter(observer(({ history }) => {
                       to={`/exercise/sessions/${exercise.id}`}
                       onClick={() => { exerciseStore.currentExercise = exercise; }}
                     >
-                      <BarChartOutlined />
+                      <BarChartOutlined style={{ fontSize: '20px' }} />
                     </Link>,
                     <Link
                       to={`/exercise/edit/${exercise.id}`}
                       onClick={() => { exerciseStore.exerciseToEdit = exercise; }}
                     >
-                      <EditOutlined />
+                      <EditOutlined style={{ fontSize: '20px' }} />
                     </Link>,
                   ]}
                 >
