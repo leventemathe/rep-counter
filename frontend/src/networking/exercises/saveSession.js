@@ -5,7 +5,5 @@ export default async (exerciseId, newSession) => {
   if (!url) throw new Error('No add sessions url found');
   const paramedUrl = `${url}/${exerciseId}`;
 
-  console.log(newSession);
-
   return request(paramedUrl, 'POST', undefined, newSession);
 };

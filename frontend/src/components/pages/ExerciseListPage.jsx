@@ -103,7 +103,7 @@ export default withRouter(observer(({ history }) => {
       {/* // TODO: Better error handling */}
       {error && error.message && <div>{JSON.stringify(error.message)}</div>}
 
-      <CollapsibleList defaultActiveKey={['0']}>
+      <CollapsibleList accordion defaultActiveKey={['0']}>
         {exercisesByCategory.map((exerciseByCategory, index) => (
           <Panel header={exerciseByCategory.category} key={`${index}`}>
             <ExerciseList
