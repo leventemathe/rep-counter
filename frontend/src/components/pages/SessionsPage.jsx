@@ -12,6 +12,8 @@ import useNetworkResource from '../../networking/useNetworkResource';
 import getSessions from '../../networking/exercises/getSessions';
 import Spinner from '../ui/Spinner';
 
+import MyAreaChart from '../charts/AreaChart';
+
 const SessionsPage = styled(Page)`  
   .recharts-cartesian-grid-vertical>line:last-child {
     stroke-opacity: 0;
@@ -129,6 +131,8 @@ export default withRouter(({ history }) => {
       {!loading && !error && !isExerciseEmpty && (
         <ChartArea>
           <Title level={4}>Magic Score</Title>
+
+          <MyAreaChart />
 
           <ResponsiveContainer width="100%" aspect={4.0 / 3.0}>
             <AreaChart
