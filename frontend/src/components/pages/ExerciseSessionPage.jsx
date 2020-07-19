@@ -69,7 +69,7 @@ export default withRouter(({ history }) => {
     if (!currentSet) return;
 
     const newAmount = currentSet[value] + amount;
-    const newSet = { ...currentSet, [value]: newAmount };
+    const newSet = { ...currentSet, [value]: newAmount < 0 ? 0 : newAmount };
 
     const newSets = [...sets];
     newSets[setIndex] = newSet;
