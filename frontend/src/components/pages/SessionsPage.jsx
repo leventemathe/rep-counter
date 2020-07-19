@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
-import { PageHeader, Typography } from 'antd';
+import { PageHeader, Typography, Empty } from 'antd';
 import {
   AreaChart, XAxis, YAxis, CartesianGrid, Area, Tooltip, ResponsiveContainer,
 } from 'recharts';
@@ -116,6 +116,11 @@ export default withRouter(({ history }) => {
     return null;
   }
 
+  const isExerciseEmpty = !exercise?.exercise?.sessions || exercise?.exercise?.sessions.length < 1;
+
+  console.log('IS EMPTY: ', isExerciseEmpty);
+  console.log(exercise);
+
   return (
     <SessionsPage>
       <PageHeader
@@ -123,57 +128,57 @@ export default withRouter(({ history }) => {
         onBack={goBack}
         title={`Sessions for ${(currentExercise.name) || 'Sessions for exercise'}`}
       />
-      {loading && !error
-        ? <Spinner />
-        : (
-          <ChartArea>
-            <Title level={4}>Magic Score</Title>
+      {loading && !error && <Spinner />}
+      {!loading && !error && !isExerciseEmpty && (
+        <ChartArea>
+          <Title level={4}>Magic Score</Title>
 
-            <ResponsiveContainer width="100%" aspect={4.0 / 3.0}>
-              <AreaChart
-                stackOffset="wiggle"
-                data={magicScores}
-                margin={{
-                  top: 16, bottom: 0, left: -12, right: 8,
-                }}
-              >
-                <defs>
-                  <linearGradient id="magicScoreAreaColor" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-                    <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid
-                  strokeDasharray="5 5"
-                  horizontal={false}
-                />
-                <XAxis
-                  dataKey="date"
-                  padding={{ right: 32 }}
-                  tick={<XTick />}
-                  interval={0}
-                />
-                <YAxis
-                  dataKey="magicScore"
-                  domain={[dataMin => dataMin * 0.6, dataMax => dataMax * 1.2]}
-                  tick={<YTick />}
-                  interval="preserveStartEnd"
-                />
-                <Tooltip />
-                <Area
-                  animationDuration={600}
-                  dot
-                  stroke="none"
-                  label={<ChartLabel />}
-                  type="monotone"
-                  dataKey="magicScore"
-                  fillOpacity={0.5}
-                  fill="url(#magicScoreAreaColor)"
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </ChartArea>
-        )}
+          <ResponsiveContainer width="100%" aspect={4.0 / 3.0}>
+            <AreaChart
+              stackOffset="wiggle"
+              data={magicScores}
+              margin={{
+                top: 16, bottom: 0, left: -12, right: 8,
+              }}
+            >
+              <defs>
+                <linearGradient id="magicScoreAreaColor" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid
+                strokeDasharray="5 5"
+                horizontal={false}
+              />
+              <XAxis
+                dataKey="date"
+                padding={{ right: 32 }}
+                tick={<XTick />}
+                interval={0}
+              />
+              <YAxis
+                dataKey="magicScore"
+                domain={[dataMin => dataMin * 0.6, dataMax => dataMax * 1.2]}
+                tick={<YTick />}
+                interval="preserveStartEnd"
+              />
+              <Tooltip />
+              <Area
+                animationDuration={600}
+                dot
+                stroke="none"
+                label={<ChartLabel />}
+                type="monotone"
+                dataKey="magicScore"
+                fillOpacity={0.5}
+                fill="url(#magicScoreAreaColor)"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </ChartArea>
+      )}
+      {!loading && isExerciseEmpty && <Empty />}
     </SessionsPage>
   );
 });
