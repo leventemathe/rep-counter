@@ -10,6 +10,7 @@ import Page from './Page';
 import ExerciseContext from '../../stores';
 import useNetworkResource from '../../networking/useNetworkResource';
 import getSessions from '../../networking/exercises/getSessions';
+import Spinner from '../ui/Spinner';
 
 const SessionsPage = styled(Page)`  
   .recharts-cartesian-grid-vertical>line:last-child {
@@ -124,7 +125,7 @@ export default withRouter(({ history }) => {
         title={`Sessions for ${(currentExercise.name) || 'Sessions for exercise'}`}
       />
       {loading && !error
-        ? 'Loading'
+        ? <Spinner />
         : (
           <ChartArea>
             <Title level={4}>Magic Score</Title>

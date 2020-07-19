@@ -17,6 +17,7 @@ import listAllExercises from '../../networking/exercises/listAllExercises';
 
 import AddButton from '../ui/AddButton';
 import NetworkingButton from '../ui/NetworkingButton';
+import Spinner from '../ui/Spinner';
 
 
 const { Panel } = Collapse;
@@ -103,51 +104,54 @@ export default withRouter(observer(({ history }) => {
       {/* // TODO: Better error handling */}
       {error && error.message && <div>{JSON.stringify(error.message)}</div>}
 
-      <CollapsibleList
-        accordion
-        defaultActiveKey={uiStore.lastOpenList || '0'}
-        onChange={index => { uiStore.lastOpenList = `${index}`; }}
-      >
-        {exercisesByCategory.map((exerciseByCategory, index) => (
-          <Panel header={exerciseByCategory.category} key={`${index}`}>
-            <ExerciseList
-              itemLayout="horizontal"
-              dataSource={exerciseByCategory.exercise || []}
-              bordered
-              split
-              loading={loading}
-              renderItem={exercise => (
-                <List.Item
-                  actions={[
-                    <Link
-                      to={`/exercise/sessions/${exercise.id}`}
-                      onClick={() => { exerciseStore.currentExercise = exercise; }}
-                    >
-                      <BarChartOutlined style={{ fontSize: '18px' }} />
-                    </Link>,
-                    <Link
-                      to={`/exercise/edit/${exercise.id}`}
-                      onClick={() => { exerciseStore.currentExercise = exercise; }}
-                    >
-                      <EditOutlined style={{ fontSize: '18px' }} />
-                    </Link>,
-                  ]}
-                >
-                  <Link
-                    to={`/exercise/${exercise.id}`}
-                    onClick={() => { exerciseStore.currentExercise = exercise; }}
+      {loading && <Spinner />}
+      {!loading && (
+        <CollapsibleList
+          accordion
+          defaultActiveKey={uiStore.lastOpenList || '0'}
+          onChange={index => { uiStore.lastOpenList = `${index}`; }}
+        >
+          {exercisesByCategory.map((exerciseByCategory, index) => (
+            <Panel header={exerciseByCategory.category} key={`${index}`}>
+              <ExerciseList
+                itemLayout="horizontal"
+                dataSource={exerciseByCategory.exercise || []}
+                bordered
+                split
+                loading={loading}
+                renderItem={exercise => (
+                  <List.Item
+                    actions={[
+                      <Link
+                        to={`/exercise/sessions/${exercise.id}`}
+                        onClick={() => { exerciseStore.currentExercise = exercise; }}
+                      >
+                        <BarChartOutlined style={{ fontSize: '18px' }} />
+                      </Link>,
+                      <Link
+                        to={`/exercise/edit/${exercise.id}`}
+                        onClick={() => { exerciseStore.currentExercise = exercise; }}
+                      >
+                        <EditOutlined style={{ fontSize: '18px' }} />
+                      </Link>,
+                    ]}
                   >
-                    <List.Item.Meta
-                      title={exercise.name}
-                      description={exercise.description}
-                    />
-                  </Link>
-                </List.Item>
-              )}
-            />
-          </Panel>
-        ))}
-      </CollapsibleList>
+                    <Link
+                      to={`/exercise/${exercise.id}`}
+                      onClick={() => { exerciseStore.currentExercise = exercise; }}
+                    >
+                      <List.Item.Meta
+                        title={exercise.name}
+                        description={exercise.description}
+                      />
+                    </Link>
+                  </List.Item>
+                )}
+              />
+            </Panel>
+          ))}
+        </CollapsibleList>
+      )}
 
       <AddExerciseButton onClick={() => history.push('/exercise/new')} />
     </Page>
