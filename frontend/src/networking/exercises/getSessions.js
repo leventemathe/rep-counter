@@ -5,5 +5,7 @@ export default async (exerciseId) => {
   if (!url) throw new Error('No new get exercise url found');
   const paramedUrl = `${url}/${exerciseId}`;
 
-  return request(paramedUrl);
+  const exercise = await request(paramedUrl);
+  const newSessions = exercise.exercise.sessions.map(session => ({ ...session, sets: session.sets.filter(set => set.weight > 0 && set.reps > 0) }));
+  return { exercise: { ...exercise, sessions: newSessions } };
 };

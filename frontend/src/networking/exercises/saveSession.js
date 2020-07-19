@@ -5,5 +5,7 @@ export default async (exerciseId, newSession) => {
   if (!url) throw new Error('No add sessions url found');
   const paramedUrl = `${url}/${exerciseId}`;
 
-  return request(paramedUrl, 'POST', undefined, newSession);
+  const filteredSession = { ...newSession, sets: newSession.sets.filter(set => set.weight > 0 && set.reps > 0) };
+
+  return request(paramedUrl, 'POST', undefined, filteredSession);
 };
