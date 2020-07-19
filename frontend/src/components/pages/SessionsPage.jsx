@@ -118,9 +118,6 @@ export default withRouter(({ history }) => {
 
   const isExerciseEmpty = !exercise?.exercise?.sessions || exercise?.exercise?.sessions.length < 1;
 
-  console.log('IS EMPTY: ', isExerciseEmpty);
-  console.log(exercise);
-
   return (
     <SessionsPage>
       <PageHeader
