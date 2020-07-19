@@ -84,7 +84,6 @@ export default withRouter(({ history }) => {
   const { exerciseStore } = useContext(ExerciseContext);
   const { currentExercise } = exerciseStore;
 
-  // TODO: error handling
   const { loading, error, resource: exercise } = useNetworkResource(() => getSessions(currentExercise.id));
 
   // sessions = [

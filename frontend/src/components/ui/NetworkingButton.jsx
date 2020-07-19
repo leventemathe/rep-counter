@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-
+import React, { useState, useContext } from 'react';
 import { Button } from 'antd';
+import { observer } from 'mobx-react';
 
-export default ({
+import Stores from '../../stores';
+
+export default observer(({
   text,
   loadingText,
   action,
@@ -16,6 +18,8 @@ export default ({
   const [resource, setResource] = useState(null);
   const [error, setError] = useState(null);
 
+  const { uiStore } = useContext(Stores);
+
   const executeAction = async () => {
     try {
       setLoading(true);
@@ -24,6 +28,7 @@ export default ({
       onNetworkResourceLoaded(resource);
     } catch (e) {
       setError(e);
+      uiStore.error = e.message || e;
       onNetworkError(error);
     } finally {
       setLoading(false);
@@ -41,4 +46,4 @@ export default ({
       {loading ? (loadingText || 'Loadint') : (text || 'OK')}
     </Button>
   );
-};
+});

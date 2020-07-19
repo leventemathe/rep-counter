@@ -1,9 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+
+import Stores from '../stores';
 
 export default (action, trigger) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [resource, setResource] = useState(null);
+
+  const { uiStore } = useContext(Stores);
 
   useEffect(() => {
     const executeAction = async () => {
@@ -13,7 +17,7 @@ export default (action, trigger) => {
         setResource(result);
         setLoading(false);
       } catch (e) {
-        console.log(e);
+        uiStore.error = e.message || e;
         setError(e);
       }
     };

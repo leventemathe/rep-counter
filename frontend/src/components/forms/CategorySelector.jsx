@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Input, Select } from 'antd';
 import styled from 'styled-components';
 
 import AddButton from '../ui/AddButton';
 
 import listAllCategories from '../../networking/exercises/listAllCategories';
+
+import Stores from '../../stores';
 
 const { Option } = Select;
 
@@ -22,14 +24,22 @@ export default ({ category, onChange }) => {
   const [newCategory, setNewCategory] = useState('');
   const [availableCategories, setAvailableCategories] = useState([]);
 
+  const { uiStore } = useContext(Stores);
+
   useEffect(() => {
     (async () => {
-      const cats = await listAllCategories();
-      setAvailableCategories(cats);
+      try {
+        const cats = await listAllCategories();
+        setAvailableCategories(cats);
+      } catch (e) {
+        uiStore.error = e.message || e;
+      }
     })();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const addNewCategory = cat => {
+    if (!cat) return;
     setNewCategory('');
     setAvailableCategories([...availableCategories, cat]);
     onChange(cat);

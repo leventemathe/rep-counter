@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 
 import {
   Form, Input, Button,
 } from 'antd';
 import CategorySelector from './CategorySelector';
+
+import Stores from '../../stores';
 
 const NewExerciseFormStyles = styled(Form)`
   margin: 16px;
@@ -20,14 +22,15 @@ const NewExerciseForm = ({ action, initialValues }) => {
 
   const [category, setCategory] = useState(initialValues?.category);
 
+  const { uiStore } = useContext(Stores);
+
   const onFinish = async (exercise) => {
     try {
       setLoading(true);
       const newExercise = exercise.category ? { ...exercise, categories: [exercise.category] } : exercise;
       await action(newExercise);
     } catch (error) {
-      // TODO: better error handling
-      console.error(error);
+      uiStore.error = error.message || error;
     } finally {
       setLoading(false);
     }

@@ -101,10 +101,8 @@ export default withRouter(observer(({ history }) => {
           onNetworkError={(e) => console.log('Error while logging out: ', e)}
         />
       </Header>
-      {/* // TODO: Better error handling */}
-      {error && error.message && <div>{JSON.stringify(error.message)}</div>}
 
-      {loading && <Spinner />}
+      {loading && !error && <Spinner />}
       {!loading && (
         <CollapsibleList
           accordion
