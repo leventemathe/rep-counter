@@ -55,6 +55,8 @@ export default withRouter(({ history }) => {
     reps: 0,
     help: 0,
   }]);
+  // TODO: use transition group and animate deletion too, this is ugly
+  const [didRemovedSet, setDidRemovedSet] = useState(false);
 
   const createNewSet = () => ({ ...(sets[0]) });
 
@@ -74,10 +76,20 @@ export default withRouter(({ history }) => {
     const newSets = [...sets];
     newSets[setIndex] = newSet;
     setSets(newSets);
+    setDidRemovedSet(false);
   };
 
   const addSet = () => {
     setSets([createNewSet(), ...sets]);
+    setDidRemovedSet(false);
+  };
+
+  const removeSet = (index) => {
+    if (sets.length <= 1) return;
+    const newSets = [...sets];
+    newSets.splice(index, 1);
+    setSets(newSets);
+    setDidRemovedSet(true);
   };
 
   if (!currentExercise) {
@@ -96,7 +108,7 @@ export default withRouter(({ history }) => {
       {sets.map((_set, index) => (
         <SetArea key={sets.length - index - 1}>
           {index === 0 && <AddSetButton onClick={addSet} />}
-          <ExerciseControllerGroup index={index} sets={sets} unit={exerciseStore.unit} adjustSet={adjustSet} />
+          <ExerciseControllerGroup index={index} sets={sets} unit={exerciseStore.unit} adjustSet={adjustSet} onRemove={removeSet} shouldAnimate={!didRemovedSet} />
         </SetArea>
       ))}
 

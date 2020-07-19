@@ -6,6 +6,6 @@ export default async (exerciseId) => {
   const paramedUrl = `${url}/${exerciseId}`;
 
   const exercise = await request(paramedUrl);
-  const newSessions = exercise.exercise.sessions.map(session => ({ ...session, sets: session.sets.filter(set => set.weight > 0 && set.reps > 0) }));
+  const newSessions = exercise.exercise.sessions.map(session => ({ ...session, sets: session.sets.filter(set => set.weight > 0 || set.reps > 0) }));
   return { exercise: { ...exercise, sessions: newSessions } };
 };

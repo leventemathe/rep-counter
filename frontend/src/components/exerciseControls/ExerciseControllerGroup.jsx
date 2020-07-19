@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 
-import { Typography } from 'antd';
+import { Typography, Button } from 'antd';
 
 import ExerciseController from './ExerciseController';
 import HelpController from './HelpController';
@@ -21,6 +21,10 @@ const TitleArea = styled.div`
   background-color: #1890ff;
   width: 100%;
 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
   @keyframes showTitleAnimation {
     from {
       transform: scale(0) translateY(-8rem);
@@ -33,16 +37,21 @@ const TitleArea = styled.div`
   ${props => props.playAnimation && css`animation: showTitleAnimation 0.3s ease-out`}
 `;
 
+const RemoveButton = styled(Button)`
+  margin: 0.6rem;
+`;
+
 /** Use this only in the ExerciseControllerGroup for now, beceause animation is optimized for that */
 export default ({
-  index, sets, unit, adjustSet,
+  index, sets, unit, adjustSet, onRemove, shouldAnimate,
 }) => {
-  const notFirstGroup = sets.length > 1 && index === 0;
+  const notFirstGroup = (sets.length > 1 && index === 0) && shouldAnimate;
 
   return (
     <Styles>
       <TitleArea playAnimation={notFirstGroup}>
         <ExerciseControllerTitle level={3}>{`Set ${sets.length - index}`}</ExerciseControllerTitle>
+        <RemoveButton type="text" onClick={() => onRemove(index)}>Remove</RemoveButton>
       </TitleArea>
 
       <ExerciseController
