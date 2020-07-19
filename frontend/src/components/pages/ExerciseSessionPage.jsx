@@ -56,7 +56,7 @@ export default withRouter(({ history }) => {
     help: 0,
   }]);
 
-  const createNewSet = () => ({ ...(sets[sets.length - 1]) });
+  const createNewSet = () => ({ ...(sets[0]) });
 
   /**
    *
