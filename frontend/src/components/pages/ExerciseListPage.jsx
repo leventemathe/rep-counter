@@ -50,7 +50,7 @@ export default withRouter(observer(({ history }) => {
   const { loading, error, resource: exercises } = useNetworkResource(listAllExercises);
   const [exercisesByCategory, setExercisesByCategory] = useState([]);
 
-  const { exerciseStore, authStore } = useContext(ExerciseContext);
+  const { exerciseStore, authStore, uiStore } = useContext(ExerciseContext);
 
   const sortExercisesByCategory = flatExercises => {
     const otherCategoryName = 'Other';
@@ -103,7 +103,11 @@ export default withRouter(observer(({ history }) => {
       {/* // TODO: Better error handling */}
       {error && error.message && <div>{JSON.stringify(error.message)}</div>}
 
-      <CollapsibleList accordion defaultActiveKey={['0']}>
+      <CollapsibleList
+        accordion
+        defaultActiveKey={uiStore.lastOpenList || '0'}
+        onChange={index => { uiStore.lastOpenList = `${index}`; }}
+      >
         {exercisesByCategory.map((exerciseByCategory, index) => (
           <Panel header={exerciseByCategory.category} key={`${index}`}>
             <ExerciseList
