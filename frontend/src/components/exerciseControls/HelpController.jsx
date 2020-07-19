@@ -4,8 +4,7 @@ import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Typography } from 'antd';
 
 const Styles = styled.div`
-  margin: 0 16px;
-  margin-top: 16px;
+  margin: 16px;
 
   display: flex;
   align-items: center;
