@@ -107,7 +107,7 @@ export default withRouter(({ history }) => {
   }, []);
 
   const goBack = () => {
-    exerciseStore.exerciseToEdit = null;
+    exerciseStore.currentExercise = null;
     history.goBack();
   };
 

@@ -23,14 +23,14 @@ const ButtonArea = styled.div`
 
 export default withRouter(({ history }) => {
   const { exerciseStore } = useContext(ExerciseContext);
-  const { exerciseToEdit } = exerciseStore;
+  const { currentExercise } = exerciseStore;
 
   const goBack = () => {
-    exerciseStore.exerciseToEdit = null;
+    exerciseStore.currentExercise = null;
     history.goBack();
   };
 
-  if (!exerciseToEdit) {
+  if (!currentExercise) {
     history.push('/');
     return null;
   }
@@ -45,17 +45,17 @@ export default withRouter(({ history }) => {
       <PageHeader
         className="site-page-header"
         onBack={goBack}
-        title={`Edit ${(exerciseToEdit.name) || 'Exercise'}`}
+        title={`Edit ${(currentExercise.name) || 'Exercise'}`}
       />
 
       <ExerciseForm
         initialValues={{
-          name: exerciseToEdit.name,
-          description: exerciseToEdit.description,
-          category: exerciseToEdit.categories && exerciseToEdit.categories[0],
+          name: currentExercise.name,
+          description: currentExercise.description,
+          category: currentExercise.categories && currentExercise.categories[0],
         }}
         action={async exercise => {
-          await updateExercise(exerciseToEdit.id, exercise);
+          await updateExercise(currentExercise.id, exercise);
           history.goBack();
         }}
       />
@@ -67,7 +67,7 @@ export default withRouter(({ history }) => {
           }}
           text="Delete Exercise"
           loadingText="Deleting"
-          action={async () => deleteExercise(exerciseToEdit.id)}
+          action={async () => deleteExercise(currentExercise.id)}
           onNetworkError={onDeleteFailed}
           onNetworkResourceLoaded={goBack}
         />

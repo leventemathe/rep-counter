@@ -127,7 +127,7 @@ export default withRouter(observer(({ history }) => {
                     </Link>,
                     <Link
                       to={`/exercise/edit/${exercise.id}`}
-                      onClick={() => { exerciseStore.exerciseToEdit = exercise; }}
+                      onClick={() => { exerciseStore.currentExercise = exercise; }}
                     >
                       <EditOutlined style={{ fontSize: '20px' }} />
                     </Link>,
