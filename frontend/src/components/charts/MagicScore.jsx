@@ -70,7 +70,7 @@ const YTick = ({
 export default ({ sessions }) => {
   const magicScores = sessions.reduce((accum, session) => {
     sessions.sort((a, b) => a.timestamp - b.timestamp);
-    const magicScore = session.sets.reduce((setAccum, set) => setAccum + (set.weight * set.reps) - ((set.weight / 2) * set.help), 0);
+    const magicScore = session.sets.reduce((setAccum, set) => setAccum + ((set.weight || 1) * set.reps) - (((set.weight || 1) / 2) * set.help), 0);
     return [...accum, { magicScore, date: session.timestamp }];
   }, []);
 
