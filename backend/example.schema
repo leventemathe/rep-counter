@@ -8,6 +8,7 @@ exercise:
 session:
   PK: exercise.SK
   SK: uuid
+  timestamp: unixTime
   sets: [
     {
       reps: 10
