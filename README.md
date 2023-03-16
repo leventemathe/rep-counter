@@ -12,7 +12,7 @@ Hosted on netlify, just push to master, and it updates.
 The backend is AWS Api Gateway, Lambda, Cognito, and DynamoDB.  
 Serverless framework is used as IAC.  
 
-Hosted on AWS (duh...), deploy with sls (see package.json).  
+Deploy with sls (see package.json).  
 
 ## Authentication
 
